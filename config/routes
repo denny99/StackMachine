@@ -7,5 +7,5 @@
 / HomeR GET POST
 /stackMachine StackMachineR GET POST
 /stackMachine/tasks StackMachineTasksR GET POST
-/stackMachine/tasks/#StackMachineTaskId StackMachineTaskR GET PUT DELETE
+/stackMachine/tasks/#StackMachineTaskId StackMachineTaskR GET POST PUT DELETE
 /stackMachine/admin StackMachineAdminR GET

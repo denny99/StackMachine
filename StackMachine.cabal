@@ -28,9 +28,11 @@ library
                      Handler.StackMachineAdmin
                      Model.Program
                      Model.Stack
+                     Model.StackMachine
                      Model.StackMachineRequest
                      Model.StackMachineResponse
                      Model.StackMachineTask
+                     Model.StackMachineTaskRequest
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT
