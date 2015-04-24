@@ -188,6 +188,31 @@ function StackMachineModel() {
             dataType: "json"
         });
     };
+    self.validateProgram = function() {
+        update(true);
+        Messenger().ajax({
+            successMessage: "Aufgabe gelöst",
+            id: "validateProgram",
+            retry: false
+        }, {
+            // sending a JSON encoded body
+            contentType: "application/json",
+            // don't process the body, we'll render data into a valid string
+            processData: false,
+            url: "/stackMachine/tasks/" + self.selectedTask(),
+            type: "POST",
+            // notice the usage of stringify here
+            data: JSON.stringify({
+                program: self.program()
+            }),
+            error: function(data) {
+                console.log(data);
+                return data.responseText;
+            },
+            // this only refers to the data type of the *returned* data
+            dataType: "json"
+        });
+    };
 
     self.disableContinue = ko.computed(function() {
        return self.program().length <= self.programCounter();

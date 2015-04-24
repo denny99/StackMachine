@@ -12,10 +12,11 @@
                         <span class="input-group-btn">
                             <button class="btn btn-success" type="button" data-bind="click: loadTask" data-toggle="tooltip" data-placement="top" title="Aufgabe starten">
                                 <span class="glyphicon glyphicon-floppy-open">
-    \<!-- ko if: taskDesc() !== "" -->
-        <div class="row form-group">
-            <div class="col-xs-12 well well-lg" data-bind="text: taskDesc">
-    \<!-- /ko -->
+    <div class="row form-group well well-lg" data-bind="visible: taskDesc() !== ''">
+        <div class="col-xs-11" data-bind="text: taskDesc">
+        <div class="col-xs-1">
+            <button type="button" class="btn btn-success btn-block" data-bind="click: validateProgram" data-toggle="tooltip" data-placement="top" title="Ergebnis überprüfen">
+                <span class="glyphicon glyphicon-send">
     <div class="row form-group">
         <div class="col-xs-6 editor">
             <div class="panel panel-default">
