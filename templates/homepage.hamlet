@@ -1,0 +1,7 @@
+<div class="container strong-pad-top">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <a class="btn btn-primary btn-block" href=@{StackMachineR}> Zu den Übungen
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <a class="btn btn-primary btn-block" href=@{StackMachineAdminR}> Übungen erstellen

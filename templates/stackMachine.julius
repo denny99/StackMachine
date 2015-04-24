@@ -1,0 +1,201 @@
+/**
+ * Created by Denny on 16.04.2015.
+ */
+Messenger.options = {
+    extraClasses: 'messenger-fixed messenger-on-top messenger-on-right',
+    theme: 'block'
+};
+
+function getCommand(line) {
+    var split = line.split(" ");
+    var result = {
+        command: split[0],
+        value: split[1]
+    };
+    switch (result.command) {
+        case "push":
+            result.value = parseInt(result.value, 10);
+            break;
+        case "slide":
+            result.value = [parseInt(split[1], 10), parseInt(split[2], 10)];
+            break;
+        default:
+            break;
+    }
+    return result;
+}
+
+function initTooltips() {
+    //init tooltips
+    $('[data-toggle="tooltip"]').tooltip({
+        container: 'body'
+    });
+}
+
+function StackMachineModel() {
+    var self = this;
+
+    //task management
+    function loadTasks() {
+        Messenger().ajax({
+            errorMessage: "Laden der Aufgaben fehlgeschlagen"
+        }, {
+            // sending a JSON encoded body
+            contentType: "application/json",
+            // don't process the body, we'll render data into a valid string
+            processData: false,
+            url: "@{StackMachineTasksR}",
+            type: "GET",
+            success: function (data) {
+                self.tasks(data.tasks);
+            },
+            // this only refers to the data type of the *returned* data
+            dataType: "json"
+        });
+    }
+    loadTasks();
+    self.tasks = ko.observableArray([]);
+    self.selectedTask = ko.observable();
+    self.loadTask = function() {
+        Messenger().ajax({
+            errorMessage: "Laden der Aufgabe fehlgeschlagen",
+            id: "loadTask"
+        }, {
+            // sending a JSON encoded body
+            contentType: "application/json",
+            // don't process the body, we'll render data into a valid string
+            processData: false,
+            url: "/stackMachine/tasks/" + self.selectedTask(),
+            type: "GET",
+            success: function (data) {
+                self.backupStack = data.task.initialStack;
+                self.taskDesc(data.task.desc);
+                self.resetProgram();
+            },
+            // this only refers to the data type of the *returned* data
+            dataType: "json"
+        });
+    };
+    self.taskDesc = ko.observable("");
+
+    //editor settings
+    self.editor = ace.edit("editor");
+    self.editor.setTheme("ace/theme/tomorrow");
+    self.editor.getSession().setMode("ace/mode/stackMachine");
+    self.editor.on("change", function (e) {
+        self.stack(self.backupStack);
+        self.programCounter(0);
+        update(false);
+    });
+
+    //program values
+    self.programCounter = ko.observable(0);
+    self.program = ko.observableArray([]);
+    self.backupStack = ["5"];
+    self.stack = ko.observableArray(["5"]);
+
+    //API actions
+    function update(removeBlank) {
+        //get whole program
+        self.program([]);
+        var lines = self.editor.getSession().getDocument().getAllLines();
+        lines.forEach(function (line, i) {
+            if (/^\s*$/.test(line) && removeBlank) {
+                self.editor.getSession().getDocument().removeLines(i, i);
+            }
+            else {
+                self.program.push(getCommand(line));
+            }
+        });
+    }
+    self.reset = function() {
+        self.editor.selectAll();
+        self.editor.removeLines();
+        self.programCounter(0);
+        self.editor.gotoLine(0);
+    };
+    self.resetProgram = function() {
+        self.stack(self.backupStack);
+        self.programCounter(0);
+        self.editor.gotoLine(0);
+    };
+    self.executeCommand = function () {
+        update(true);
+        Messenger().ajax({
+            errorMessage: "Fehlerhafter Code",
+            id: "executeCommand",
+            retry: false
+        },
+            {
+            // sending a JSON encoded body
+            contentType: "application/json",
+            // don't process the body, we'll render data into a valid string
+            processData: false,
+            url: "@{StackMachineR}",
+            type: "POST",
+            // notice the usage of stringify here
+            data: JSON.stringify({
+                stack: self.stack(),
+                program: self.program(),
+                programCounter: self.programCounter(),
+                all: false
+            }),
+            success: function (data) {
+                self.stack(data.stack);
+                self.programCounter(data.programCounter);
+                //highlight current line
+                self.editor.gotoLine(data.programCounter + 1);
+            },
+            error: function(data) {
+                self.editor.gotoLine(self.programCounter() + 1);
+                return data.responseJSON.error;
+            },
+            // this only refers to the data type of the *returned* data
+            dataType: "json"
+        });
+    };
+    self.executeProgram = function () {
+        self.resetProgram();
+        update(true);
+        Messenger().ajax({
+            errorMessage: "Fehlerhafter Code",
+            id: "executeProgram",
+            retry: false
+        }, {
+            // sending a JSON encoded body
+            contentType: "application/json",
+            // don't process the body, we'll render data into a valid string
+            processData: false,
+            url: "@{StackMachineR}",
+            type: "POST",
+            // notice the usage of stringify here
+            data: JSON.stringify({
+                stack: self.stack(),
+                program: self.program(),
+                programCounter: self.programCounter(),
+                all: true
+            }),
+            success: function (data) {
+                self.stack(data.stack);
+                self.programCounter(data.programCounter);
+                //highlight current line
+                self.editor.gotoLine(data.programCounter + 1);
+            },
+            error: function(data) {
+                return data.responseJSON.error;
+            },
+            // this only refers to the data type of the *returned* data
+            dataType: "json"
+        });
+    };
+
+    self.disableContinue = ko.computed(function() {
+       return self.program().length <= self.programCounter();
+    });
+}
+var stackMachineModel = new StackMachineModel();
+$(document).ready(function() {
+    ko.applyBindings(stackMachineModel, document.getElementById("main"));
+    initTooltips();
+    $("#main").fadeIn();
+});

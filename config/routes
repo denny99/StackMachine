@@ -1,0 +1,11 @@
+/static StaticR Static appStatic
+/auth   AuthR   Auth   getAuth
+
+/favicon.ico FaviconR GET
+/robots.txt RobotsR GET
+
+/ HomeR GET POST
+/stackMachine StackMachineR GET POST
+/stackMachine/tasks StackMachineTasksR GET POST
+/stackMachine/tasks/#StackMachineTaskId StackMachineTaskR GET PUT DELETE
+/stackMachine/admin StackMachineAdminR GET

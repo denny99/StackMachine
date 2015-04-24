@@ -1,0 +1,110 @@
+<div class="container" id="main" style="display: none">
+    \<!-- ko if: editorActive -->
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <h2 class="text-center"> Aufgaben Editor
+                <div class="form-group" data-bind="css:{'has-error': taskName() ===''}">
+                    <label for="taskName">Name der Aufgabe
+                    <input type="text" class="form-control" id="taskName" placeholder="Namen eingeben" data-bind="value: taskName, valueUpdate: 'input'">
+                <div class="form-group" data-bind="css:{'has-error': taskDesc() ===''}">
+                    <label for="taskDesc">Aufgabenbeschreibung
+                    <textarea type="text" class="form-control" id="taskDesc" placeholder="Beschreibung eingeben" data-bind="value: taskDesc, valueUpdate: 'input'">
+                <div class="form-group">
+                    <label for="initialStack">Ausgangs-Stack
+                    <div class="input-group" id="initialStack">
+                        <span class="input-group-btn">
+                            <button class="btn btn-danger" type="button" data-bind="click: popInitialStack" data-toggle="tooltip" data-placement="top" title="Entferne oberstes Element">
+                                <span class="glyphicon glyphicon-remove">
+                        <input type="text" class="form-control text-right" placeholder="Wert eingeben" data-bind="value: initialInput, valueUpdate: 'input'">
+                        <span class="input-group-btn">
+                            <button class="btn btn-success" type="button" data-bind="click: pushInitialStack, attr: {disabled: initialInput() === ''}" data-toggle="tooltip" data-placement="top" title="Füge Wert hinzu">
+                                <span class="glyphicon glyphicon-plus">
+                <div class="form-group">
+                    <label for="targetStack">Ziel-Stack
+                    <div class="input-group" id="targetStack">
+                        <span class="input-group-btn">
+                            <button class="btn btn-danger" type="button" data-bind="click: popTargetStack" data-toggle="tooltip" data-placement="top" title="Entferne oberstes Element">
+                                <span class="glyphicon glyphicon-remove">
+                        <input type="text" class="form-control text-right" placeholder="Wert eingeben" data-bind="value: targetInput, valueUpdate: 'input'">
+                        <span class="input-group-btn">
+                            <button class="btn btn-success" type="button" data-bind="click: pushTargetStack, attr: {disabled: targetInput() === ''}" data-toggle="tooltip" data-placement="top" title="Füge Wert hinzu">
+                                <span class="glyphicon glyphicon-plus">
+                <div class="form-group">
+                    <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                        <a type="button" class="btn btn-danger" data-bind="click: cancelCreation" data-toggle="tooltip" data-placement="top" title="Abbrechen">
+                            <span class="glyphicon glyphicon-remove">
+                        <a type="button" class="btn btn-success" data-bind="click: saveTask, attr: {disabled: taskName() === '' || taskDesc() === ''}" data-toggle="tooltip" data-placement="top" title="Aufgabe speichern">
+                            <span class="glyphicon glyphicon-floppy-save">
+            <div class="col-xs-3 stackTable">
+                <h3 class="text-center"> Ausgangs-Stack
+                \<!-- ko if: initialStack().length <= 12 -->
+                    <div class="bottom transformed circle stack">
+                    <div class="rectangleTop stack" data-bind="style: {top: (520 - 30 * initialStack().length) + 'px'}">
+                    \<!-- ko foreach: initialStack -->
+                        <div class="rectangle stack" data-bind="style: {top: (550 - 30 * ($parent.initialStack().length - 1 - $index())) + 'px'}">
+                            <div class="stackContent" data-bind="text: $data">
+                    \<!-- /ko -->
+                    <div class="top transformed circle" data-bind="style: {top: (420 - 30 * initialStack().length) + 'px'}">
+                \<!-- /ko -->
+                \<!-- ko if: initialStack().length > 12 -->
+                    <table class="table table-bordered">
+                        <thead>
+                            <th> Index
+                            <th> Wert
+                        <tbody data-bind="foreach: initialStack">
+                            <tr>
+                                <td data-bind="text: $index">
+                                <td data-bind="text: $data">
+                \<!-- /ko -->
+            <div class="col-xs-3 stackTable">
+                <h3 class="text-center"> Ziel-Stack
+                \<!-- ko if: targetStack().length <= 12 -->
+                    <div class="bottom transformed circle stack">
+                    <div class="rectangleTop stack" data-bind="style: {top: (520 - 30 * targetStack().length) + 'px'}">
+                    \<!-- ko foreach: targetStack -->
+                        <div class="rectangle stack" data-bind="style: {top: (550 - 30 * ($parent.targetStack().length - 1 - $index())) + 'px'}">
+                            <div class="stackContent" data-bind="text: $data">
+                    \<!-- /ko -->
+                    <div class="top transformed circle" data-bind="style: {top: (420 - 30 * targetStack().length) + 'px'}">
+                \<!-- /ko -->
+                \<!-- ko if: targetStack().length > 12 -->
+                    <table class="table table-bordered">
+                        <thead>
+                            <th> Index
+                            <th> Wert
+                        <tbody data-bind="foreach: targetStack">
+                            <tr>
+                                <td data-bind="text: $index">
+                                <td data-bind="text: $data">
+                \<!-- /ko -->
+    \<!-- /ko -->
+    \<!-- ko ifnot: editorActive -->
+        <div class="row">
+            <div class="col-xs-12">
+                <h2> Aufgabenübersicht
+                <div class="overview">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <th> Aufgabennamen
+                            <th> Ausgangs-Stack
+                            <th> Ziel-Stack
+                            <td>
+                                <button class="btn btn-success btn-block" data-bind="click: createTask" data-toggle="tooltip" data-placement="top" title="Neue Aufgabe erstellen">
+                                    <span class="glyphicon glyphicon-plus">
+                        <tbody data-bind="foreach: tasks">
+                            <tr>
+                                <td data-bind="text: name">
+                                <td data-bind="text: initialStack">
+                                <td data-bind="text: targetStack">
+                                <td style="max-width: 100px; width: 100px">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-danger" data-bind="click: $parent.deleteTask"  data-toggle="tooltip" data-placement="top" title="Löschen">
+                                            <span class="glyphicon glyphicon-remove">
+                                        <button type="button" class="btn btn-warning" data-bind="click: $parent.modifyTask" data-toggle="tooltip" data-placement="top" title="Bearbeiten">
+                                            <span class="glyphicon glyphicon-pencil">
+    \<!-- /ko -->
+    <div class="row">
+        <div class="col-xs-12">
+            <a class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Hauptmenü" href=@{HomeR}>
+                <span class="glyphicon glyphicon-chevron-left">

@@ -1,0 +1,145 @@
+/**
+ * Created by Denny on 16.04.2015.
+ */
+Messenger.options = {
+    extraClasses: 'messenger-fixed messenger-on-top messenger-on-right',
+    theme: 'block'
+};
+
+function initTooltips() {
+    //init tooltips
+    $('[data-toggle="tooltip"]').tooltip({
+        container: 'body'
+    });
+}
+
+function removeTooltips() {
+    $('[data-toggle="tooltip"]').tooltip('destroy');
+}
+
+function StackMachineAdminModel() {
+    var self = this;
+
+    //init
+    //load all existing tasks
+    function loadTasks() {
+        Messenger().ajax({
+            errorMessage: "Laden der Aufgaben fehlgeschlagen"
+        }, {
+            // sending a JSON encoded body
+            contentType: "application/json",
+            // don't process the body, we'll render data into a valid string
+            processData: false,
+            url: "@{StackMachineTasksR}",
+            type: "GET",
+            success: function (data) {
+                removeTooltips();
+                self.tasks(data.tasks);
+                initTooltips();
+            },
+            // this only refers to the data type of the *returned* data
+            dataType: "json"
+        });
+    }
+    loadTasks();
+
+    self.editorActive = ko.observable(false);
+
+    self.taskId = ko.observable();
+    self.taskName = ko.observable("");
+    self.taskDesc = ko.observable("");
+
+    self.tasks = ko.observableArray([]);
+    self.initialStack = ko.observableArray([]);
+    self.targetStack = ko.observableArray([]);
+
+    self.initialInput = ko.observable("");
+    self.targetInput = ko.observable("");
+    self.pushInitialStack = function() {
+        self.initialStack.unshift(self.initialInput().replace(/\s/g, ""));
+        self.initialInput("")
+    };
+    self.popInitialStack = function() {
+        self.initialStack.shift();
+    };
+    self.pushTargetStack = function() {
+        self.targetStack.unshift(self.targetInput().replace(/\s/g, ""));
+        self.targetInput("");
+    };
+    self.popTargetStack = function() {
+        self.targetStack.shift();
+    };
+
+    self.cancelCreation = function() {
+        removeTooltips();
+        self.editorActive(false);
+        initTooltips();
+        self.initialStack([]);
+        self.targetStack([]);
+        self.taskName("");
+        self.taskDesc("");
+        self.taskId();
+    };
+    self.saveTask = function() {
+        var type = "POST";
+        var url = "/stackMachine/tasks";
+        if (self.taskId()) {
+            type = "PUT";
+            url = "/stackMachine/tasks/" + self.taskId()
+        }
+        Messenger().ajax({
+            errorMessage: "Speichern fehlgeschlagen. Bitte noch einmal versuchen"
+        }, {
+            url: url,
+            type: type,
+            processData: false,
+            data: JSON.stringify({
+                initialStack: self.initialStack(),
+                targetStack: self.targetStack(),
+                desc: self.taskDesc(),
+                name: self.taskName()
+            }),
+            success: function () {
+                loadTasks();
+                self.cancelCreation();
+            },
+            error: function() {
+            }
+        });
+    };
+    self.deleteTask = function(task) {
+        Messenger().ajax({
+            errorMessage: "Löschen fehlgeschlagen. Bitte noch einmal versuchen"
+        }, {
+            url: "/stackMachine/tasks/" + task.id,
+            type: "DELETE",
+            success: function () {
+                loadTasks();
+            },
+            error: function() {
+            }
+        });
+    };
+    self.modifyTask = function(task) {
+        removeTooltips();
+        self.editorActive(true);
+        initTooltips();
+        self.initialStack(task.initialStack);
+        self.targetStack(task.targetStack);
+        self.taskName(task.name);
+        self.taskDesc(task.desc);
+        self.taskId(task.id);
+    };
+    self.createTask = function() {
+        self.cancelCreation();
+        self.editorActive(true);
+        initTooltips();
+    }
+}
+
+$(document).ready(function() {
+    var stackMachineModel = new StackMachineAdminModel();
+    ko.applyBindings(stackMachineModel, document.getElementById("main"));
+    initTooltips();
+    $("#main").fadeIn();
+});

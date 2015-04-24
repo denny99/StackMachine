@@ -1,0 +1,20 @@
+Default: &defaults
+  database: StackMachine.sqlite3
+  poolsize: 10
+
+Development:
+  <<: *defaults
+
+Testing:
+  database: StackMachine_test.sqlite3
+  <<: *defaults
+
+Staging:
+  database: StackMachine_staging.sqlite3
+  poolsize: 100
+  <<: *defaults
+
+Production:
+  database: StackMachine_production.sqlite3
+  poolsize: 100
+  <<: *defaults

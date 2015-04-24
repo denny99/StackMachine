@@ -1,0 +1,59 @@
+<div id="main" class="container" style="display: none">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h2>Stackmaschinen Simulator
+    <div class="row form-group">
+        <div class="col-xs-12 text-center">
+            <div class="form-inline">
+                <div class="form-group">
+                    <label for="taskSelect"> Aufgabe laden
+                    <div class="input-group" id="taskSelect">
+                        <select class="form-control" data-bind="options: tasks, optionsValue: 'id', optionsText: 'name', value: selectedTask">
+                        <span class="input-group-btn">
+                            <button class="btn btn-success" type="button" data-bind="click: loadTask" data-toggle="tooltip" data-placement="top" title="Aufgabe starten">
+                                <span class="glyphicon glyphicon-floppy-open">
+    \<!-- ko if: taskDesc() !== "" -->
+        <div class="row form-group">
+            <div class="col-xs-12 well well-lg" data-bind="text: taskDesc">
+    \<!-- /ko -->
+    <div class="row form-group">
+        <div class="col-xs-6 editor">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">SkriptEditor</h3>
+                <div class="panel-body remove padding">
+                    <div id="editor" class="editor">
+                <div class="panel-footer">
+                    <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                        <a type="button" class="btn btn-warning" data-bind="click: reset" data-toggle="tooltip" data-placement="top" title="Neues Skript">
+                            <span class="glyphicon glyphicon-file">
+                        <a type="button" class="btn btn-success" data-bind="click: resetProgram" data-toggle="tooltip" data-placement="top" title="Programm neustarten">
+                            <span class="glyphicon glyphicon-repeat">
+                        <a type="button" class="btn btn-primary" data-bind="click: executeCommand, attr: {disabled: disableContinue}" data-toggle="tooltip" data-placement="top" title="Schrittweise ausführen">
+                            <span class="glyphicon glyphicon-chevron-right">
+                        <a type="button" class="btn btn-primary" data-bind="click: executeProgram" data-toggle="tooltip" data-placement="top" title="Alles ausführen">
+                            <span class="glyphicon glyphicon-play">
+        <div class="col-xs-6 stackTable">
+            \<!-- ko if: stack().length <= 16 -->
+                <div class="bottom transformed circle stack">
+                <div class="rectangleTop stack" data-bind="style: {top: (520 - 30 * stack().length) + 'px'}">
+                \<!-- ko foreach: stack -->
+                    <div class="rectangle stack" data-bind="style: {top: (550 - 30 * ($parent.stack().length - 1 - $index())) + 'px'}">
+                        <div class="stackContent" data-bind="text: $data">
+                \<!-- /ko -->
+                <div class="top transformed circle" data-bind="style: {top: (420 - 30 * stack().length) + 'px'}">
+            \<!-- /ko -->
+            \<!-- ko if: stack().length > 16 -->
+                <table class="table table-bordered">
+                    <thead>
+                        <th> Index
+                        <th> Wert
+                    <tbody data-bind="foreach: stack">
+                        <tr>
+                            <td data-bind="text: $index">
+                            <td data-bind="text: $data">
+            \<!-- /ko -->
+    <div class="row">
+        <div class="col-xs-12">
+            <a class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Hauptmenü" href=@{HomeR}>
+                <span class="glyphicon glyphicon-chevron-left">
