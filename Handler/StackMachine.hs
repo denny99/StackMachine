@@ -6,7 +6,9 @@ import qualified Model.StackMachineRequest as Request
 import Model.StackMachine
 
 getStackMachineR :: Handler Html
-getStackMachineR = defaultLayout $(widgetFile "stackMachine")
+getStackMachineR = do
+    setSession "key" siteSecret
+    defaultLayout $(widgetFile "stackMachine")
 
 postStackMachineR :: Handler Value
 postStackMachineR = do

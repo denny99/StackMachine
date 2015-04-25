@@ -11,26 +11,42 @@ import Model.StackMachineResponse
 
 getStackMachineTaskR :: StackMachineTaskId -> Handler Value
 getStackMachineTaskR stackMachineTaskId = do
-    task <- runDB $ get404 stackMachineTaskId
-    return $ object ["task" .= Entity stackMachineTaskId task]
+    auth <- isAPIAuthenticated
+    if not auth then
+            sendResponseStatus status401 ("NOT AUTHORIZED" :: Text)
+        else do
+            task <- runDB $ get404 stackMachineTaskId
+            return $ object ["task" .= Entity stackMachineTaskId task]
 
 postStackMachineTaskR :: StackMachineTaskId -> Handler Value
 postStackMachineTaskR stackMachineTaskId = do
-    task <- runDB $ get404 stackMachineTaskId
-    body <- requireJsonBody :: Handler StackMachineTaskRequest
-    if stack (executeAll (read (T.unpack (stackMachineTaskInitialStack task)) :: Stack) (program body) 0 0) /= (read (T.unpack (stackMachineTaskTargetStack task)) :: Stack)
-        then
-            sendResponseStatus status400 ("Ergebnis fehlerhaft" :: Text)
-        else
-            sendResponseStatus status200 ("Korrekt" :: Text)
+   auth <- isAPIAuthenticated
+   if not auth then
+           sendResponseStatus status401 ("NOT AUTHORIZED" :: Text)
+       else do
+           task <- runDB $ get404 stackMachineTaskId
+           body <- requireJsonBody :: Handler StackMachineTaskRequest
+           if stack (executeAll (read (T.unpack (stackMachineTaskInitialStack task)) :: Stack) (program body) 0 0) /= (read (T.unpack (stackMachineTaskTargetStack task)) :: Stack)
+               then
+                   sendResponseStatus status400 ("Ergebnis fehlerhaft" :: Text)
+               else
+                   sendResponseStatus status200 ("Korrekt" :: Text)
 
 putStackMachineTaskR :: StackMachineTaskId -> Handler Value
 putStackMachineTaskR stackMachineTaskId = do
-    task <- requireJsonBody :: Handler StackMachineTask
-    runDB $ replace stackMachineTaskId task
-    sendResponseStatus status200 ("UPDATED" :: Text)
+    auth <- isAPIAuthenticated
+    if not auth then
+            sendResponseStatus status401 ("NOT AUTHORIZED" :: Text)
+        else do
+            task <- requireJsonBody :: Handler StackMachineTask
+            runDB $ replace stackMachineTaskId task
+            sendResponseStatus status200 ("UPDATED" :: Text)
 
 deleteStackMachineTaskR :: StackMachineTaskId -> Handler Value
 deleteStackMachineTaskR stackMachineTaskId = do
-    runDB $ delete stackMachineTaskId
-    sendResponseStatus status200 ("DELETED" :: Text)
+    auth <- isAPIAuthenticated
+    if not auth then
+            sendResponseStatus status401 ("NOT AUTHORIZED" :: Text)
+        else do
+            runDB $ delete stackMachineTaskId
+            sendResponseStatus status200 ("DELETED" :: Text)

@@ -5,12 +5,21 @@ import Model.StackMachineTask()
 
 getStackMachineTasksR :: Handler Value
 getStackMachineTasksR = do
-    tasks <- runDB $ selectList [] [] :: Handler [Entity StackMachineTask]
-    return $ object ["tasks" .= tasks]
+    auth <- isAPIAuthenticated
+    if not auth then
+            sendResponseStatus status401 ("NOT AUTHORIZED" :: Text)
+        else do
+            tasks <- runDB $ selectList [] [] :: Handler [Entity StackMachineTask]
+            return $ object ["tasks" .= tasks]
 
 postStackMachineTasksR :: Handler Html
 postStackMachineTasksR = do
-    task <- requireJsonBody :: Handler StackMachineTask
-    _    <- runDB $ insert task
+    auth <- isAPIAuthenticated
+    if not auth
+        then
+            sendResponseStatus status401 ("NOT AUTHORIZED" :: Text)
+        else do
+            task <- requireJsonBody :: Handler StackMachineTask
+            _    <- runDB $ insert task
 
-    sendResponseStatus status201 ("CREATED" :: Text)
+            sendResponseStatus status201 ("CREATED" :: Text)
