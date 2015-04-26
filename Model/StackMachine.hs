@@ -2,12 +2,12 @@ module Model.StackMachine where
 
 import Import
 import Data.Char(isDigit)
-import qualified Data.Text as T
 import qualified Data.List as L
 import qualified Data.Maybe as M
 import qualified Prelude as P
 import Model.Program
 import Model.Stack
+import qualified Model.Formula as F
 import qualified Model.StackMachineResponse as Response
 
 --stackMachine operations
@@ -29,38 +29,33 @@ execute (PUSH x) stack _ programCounter jumpCounter =
 execute POP [] _ _ _ = error "Stack enthält keine Elemente"
 execute POP (_:stack) _ programCounter jumpCounter = Response.StackMachineResponse stack (programCounter + 1) jumpCounter
 
-execute (PUSHK x) stack _ programCounter jumpCounter = Response.StackMachineResponse (x : stack) (programCounter + 1) jumpCounter
+execute (PUSHK x) stack _ programCounter jumpCounter
+    | isNumber x || length x == 1 = Response.StackMachineResponse (F.Value x : stack) (programCounter + 1) jumpCounter
+    | otherwise = error "pushK nur für Zahlen oder Character"
 
 execute ADD (x:y:xs) _ programCounter jumpCounter =
-    if isNumber (unpack x) && isNumber (unpack y) then
-        Response.StackMachineResponse (pack (show ((P.read (unpack y) :: Int) + (P.read (unpack x) :: Int))) : xs) (programCounter + 1) jumpCounter
-    else do
-        let y1 = if T.head y == '(' && T.last y == ')'
-                then T.init $ T.tail y
-                else y
-        let x1 = if T.head x == '(' && T.last x == ')'
-                then T.init $ T.tail x
-                else x
-        Response.StackMachineResponse (concat ["(", y1, "+", x1, ")"] : xs) (programCounter + 1) jumpCounter
+    if isNumber (show x) && isNumber (show y) then
+        Response.StackMachineResponse (F.Value (show ((P.read (show y) :: Int) + (P.read (show x) :: Int))) : xs) (programCounter + 1) jumpCounter
+    else Response.StackMachineResponse (F.ADD y x : xs) (programCounter + 1) jumpCounter
 execute ADD _ _ _ _ = error "Nicht genug Elemente im Stack"
 
 execute SUBTRACT (x:y:xs) _ programCounter jumpCounter
-    | isNumber (unpack x) && isNumber (unpack y) = Response.StackMachineResponse (pack (show ((P.read (unpack y) :: Int) - (P.read (unpack x) :: Int))) : xs) (programCounter + 1) jumpCounter
-    | otherwise = Response.StackMachineResponse (concat ["(", y, "-", x, ")"] : xs) (programCounter + 1) jumpCounter
+    | isNumber (show x) && isNumber (show y) = Response.StackMachineResponse (F.Value (show ((P.read (show y) :: Int) - (P.read (show x) :: Int))) : xs) (programCounter + 1) jumpCounter
+    | otherwise = Response.StackMachineResponse (F.SUB y x : xs) (programCounter + 1) jumpCounter
 execute SUBTRACT _ _ _ _ = error "Nicht genug Elemente im Stack"
 
 execute MULTIPLY (x:y:xs) _ programCounter jumpCounter =
-    if isNumber (unpack x) && isNumber (unpack y) then
-        Response.StackMachineResponse (pack (show ((P.read (unpack y) :: Int) * (P.read (unpack x) :: Int))) : xs) (programCounter + 1) jumpCounter
+    if isNumber (show x) && isNumber (show y) then
+        Response.StackMachineResponse (F.Value (show ((P.read (show y) :: Int) * (P.read (show x) :: Int))) : xs) (programCounter + 1) jumpCounter
     else
-        Response.StackMachineResponse (concat [y, "*", x] : xs) (programCounter + 1) jumpCounter
+        Response.StackMachineResponse (F.MUL y x : xs) (programCounter + 1) jumpCounter
 execute MULTIPLY _ _ _ _ = error "Nicht genug Elemente im Stack"
 
 execute DIVIDE (x:y:xs) _ programCounter jumpCounter =
-    if isNumber (unpack x) && isNumber (unpack y) then
-        Response.StackMachineResponse (pack (show ((P.read (unpack y) :: Int) `div` (P.read (unpack x) :: Int))) : xs) (programCounter + 1) jumpCounter
+    if isNumber (show x) && isNumber (show y) then
+        Response.StackMachineResponse (F.Value (show ((P.read (show y) :: Int) `div` (P.read (show x) :: Int))) : xs) (programCounter + 1) jumpCounter
     else
-        Response.StackMachineResponse (concat [y, "/", x] : xs) (programCounter + 1) jumpCounter
+        Response.StackMachineResponse (F.DIV y x : xs) (programCounter + 1) jumpCounter
 execute DIVIDE _ _ _ _ = error "Nicht genug Elemente im Stack"
 
 execute PRINT stack _ programCounter jumpCounter = Response.StackMachineResponse (P.tail stack) (programCounter + 1) jumpCounter
@@ -74,7 +69,7 @@ execute (MARK _) stack _ programCounter jumpCounter = Response.StackMachineRespo
 execute (JUMP x) stack program _ jumpCounter = Response.StackMachineResponse stack (findMark program (MARK x)) (jumpCounter + 1)
 execute (BRANCHZ _) [] _ _ _ = error "Stack enthaelt kein Element"
 execute (BRANCHZ x) (y:xs) program programCounter jumpCounter =
-    if y == "0" then
+    if show y == "0" then
         Response.StackMachineResponse xs (findMark program (MARK x)) (jumpCounter + 1)
     else
         Response.StackMachineResponse xs (programCounter + 1) (jumpCounter + 1)

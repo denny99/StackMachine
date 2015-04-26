@@ -2,10 +2,10 @@
 module Model.Program where
 
 import Import
-import qualified Data.Text as T
+import qualified Prelude as P
 
-data Command = PUSH Int | POP | BRANCHZ Text |
-  JUMP Text | MARK Text | PUSHK Text | ADD |
+data Command = PUSH Int | POP | BRANCHZ String |
+  JUMP String | MARK String | PUSHK String | ADD |
   SUBTRACT | MULTIPLY | DIVIDE | PRINT | SLIDE [Int]
   deriving (Show, Eq)
 
@@ -14,29 +14,29 @@ type Program = [Command]
 instance FromJSON Command where
     parseJSON (Object o) = do
         command <- o .: "command"
-        if command == ("push" :: Text)
+        if command == ("push" :: String)
             then PUSH <$> o .: "value"
-            else if command == ("pop" :: Text)
+            else if command == ("pop" :: String)
                 then return POP
-                else if command == ("branchz" :: Text)
+                else if command == ("branchz" :: String)
                     then BRANCHZ <$> o .: "value"
-                    else if command == ("jump" :: Text)
+                    else if command == ("jump" :: String)
                         then JUMP <$> o .: "value"
-                        else if command == ("pushK" :: Text)
+                        else if command == ("pushK" :: String)
                             then PUSHK <$> o .: "value"
-                            else if command == ("+" :: Text)
+                            else if command == ("+" :: String)
                                 then return ADD
-                                else if command == ("-" :: Text)
+                                else if command == ("-" :: String)
                                     then return SUBTRACT
-                                    else if command == ("*" :: Text)
+                                    else if command == ("*" :: String)
                                         then return MULTIPLY
-                                        else if command == ("/" :: Text)
+                                        else if command == ("/" :: String)
                                             then return DIVIDE
-                                            else if command == ("slide" :: Text)
+                                            else if command == ("slide" :: String)
                                                 then SLIDE <$> o .: "value"
-                                                else if command == ("print" :: Text)
+                                                else if command == ("print" :: String)
                                                   then return PRINT
-                                                  else return $ MARK $ T.init command
+                                                  else return $ MARK $ P.init command
 
     parseJSON _ = mzero
 
@@ -44,7 +44,7 @@ instance ToJSON (Command) where
     toJSON (command) = object
         [ "command"      .= getCommand command
         ]
-getCommand :: Command -> Text
+getCommand :: Command -> String
 getCommand (PUSH _) = "push"
 getCommand (POP) = "pop"
 getCommand (BRANCHZ _) = "branchz"

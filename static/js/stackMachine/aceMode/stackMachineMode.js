@@ -7,7 +7,7 @@ define('ace/mode/stackMachine_highlight_rules', ["require", "exports", "module",
 
         this.$rules = {
             "start": [
-                {token: "storage.type", regex: "pushK ", next: "value"},
+                {token: "storage.type", regex: "pushK ", next: "char"},
                 {token: "storage.type", regex: "push ", next: "number"},
                 {token: "storage.type", regex: "slide ", next: "slideInput"},
                 {token: "storage.type", regex: /pop$/},
@@ -33,9 +33,9 @@ define('ace/mode/stackMachine_highlight_rules', ["require", "exports", "module",
                 {token: "constant.numeric.bold", regex: /[0-9]+$/, next: "start"},
                 {defaultToken: "invalid"}
             ],
-            "value": [
-                {token: "constant.numeric.bold", regex: /[0-9]+$/, next: "start"},
-                {token: "string.qouted.double.bold", regex: /.*$/, next: "start"},
+            "char": [
+                {token: "constant.numeric.bold", regex: /[0-9]*$/, next: "start"},
+                {token: "string.qouted.double.bold", regex: /.{1}$/, next: "start"},
                 {defaultToken: "invalid"}
             ]
         };

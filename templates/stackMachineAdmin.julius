@@ -93,6 +93,7 @@ function StackMachineAdminModel() {
             url: url,
             type: type,
             processData: false,
+            contentType: "application/json",
             data: JSON.stringify({
                 initialStack: self.initialStack(),
                 targetStack: self.targetStack(),

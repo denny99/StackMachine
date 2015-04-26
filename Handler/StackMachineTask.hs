@@ -8,6 +8,7 @@ import Model.StackMachine
 import Model.StackMachineTask()
 import Model.StackMachineTaskRequest
 import Model.StackMachineResponse
+import Model.Formula
 
 getStackMachineTaskR :: StackMachineTaskId -> Handler Value
 getStackMachineTaskR stackMachineTaskId = do
@@ -26,7 +27,7 @@ postStackMachineTaskR stackMachineTaskId = do
        else do
            task <- runDB $ get404 stackMachineTaskId
            body <- requireJsonBody :: Handler StackMachineTaskRequest
-           if stack (executeAll (read (T.unpack (stackMachineTaskInitialStack task)) :: Stack) (program body) 0 0) /= (read (T.unpack (stackMachineTaskTargetStack task)) :: Stack)
+           if show (stack (executeAll (arrayToStack (stackMachineTaskInitialStack task)) (program body) 0 0)) /= show (arrayToStack (stackMachineTaskTargetStack task))
                then
                    sendResponseStatus status400 ("Ergebnis fehlerhaft" :: Text)
                else

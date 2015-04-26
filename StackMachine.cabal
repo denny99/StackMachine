@@ -33,6 +33,7 @@ library
                      Model.StackMachineResponse
                      Model.StackMachineTask
                      Model.StackMachineTaskRequest
+                     Model.Formula
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT

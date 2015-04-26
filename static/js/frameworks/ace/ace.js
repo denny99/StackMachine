@@ -319,7 +319,7 @@ if ([1,2].splice(0).length != 2) {
         lengthBefore = array.length; //46
         array.splice(5, 0, "XXX"); // add one element
 
-        lengthBefore + 1 == array.length;
+        lengthBefore + 1 == array.length
 
         if (lengthBefore + 1 == array.length) {
             return true;// has right splice implementation without bugs
@@ -728,7 +728,7 @@ if (Object.defineProperty) {
 
 if (!Object.defineProperty || definePropertyFallback) {
     var ERR_NON_OBJECT_DESCRIPTOR = "Property description must be an object: ";
-    var ERR_NON_OBJECT_TARGET = "Object.defineProperty called on non-object: ";
+    var ERR_NON_OBJECT_TARGET = "Object.defineProperty called on non-object: "
     var ERR_ACCESSORS_NOT_SUPPORTED = "getters & setters can not be defined " +
                                       "on this javascript engine";
 
@@ -960,7 +960,7 @@ exports.getDocumentHead = function(doc) {
     if (!doc)
         doc = document;
     return doc.head || doc.getElementsByTagName("head")[0] || doc.documentElement;
-};
+}
 
 exports.createElement = function(tag, ns) {
     return document.createElementNS ?
@@ -2216,7 +2216,7 @@ var TextInput = function(parentNode, host) {
             timer = null;
             var str = text.value.replace(/\x01/g, "");
             if (inComposition)
-
+                return;
             else if (str == c.lastValue)
                 resetValue();
             else if (!c.lastValue && str) {
@@ -2301,7 +2301,7 @@ var TextInput = function(parentNode, host) {
     this.onContextMenuClose = onContextMenuClose;
     var closeTimeout;
     function onContextMenuClose() {
-        clearTimeout(closeTimeout);
+        clearTimeout(closeTimeout)
         closeTimeout = setTimeout(function () {
             if (tempStyle) {
                 text.style.cssText = tempStyle;
@@ -3337,7 +3337,7 @@ EventEmitter.once = function(eventName, callback) {
 
 
 EventEmitter.setDefaultHandler = function(eventName, callback) {
-    var handlers = this._defaultHandlers;
+    var handlers = this._defaultHandlers
     if (!handlers)
         handlers = this._defaultHandlers = {_disabled_: {}};
     
@@ -3354,7 +3354,7 @@ EventEmitter.setDefaultHandler = function(eventName, callback) {
     handlers[eventName] = callback;
 };
 EventEmitter.removeDefaultHandler = function(eventName, callback) {
-    var handlers = this._defaultHandlers;
+    var handlers = this._defaultHandlers
     if (!handlers)
         return;
     var disabled = handlers._disabled_[eventName];
@@ -3682,8 +3682,9 @@ init(true);function init(packaged) {
     for (var key in scriptOptions)
         if (typeof scriptOptions[key] !== "undefined")
             exports.set(key, scriptOptions[key]);
-    }
-    exports.init = init;
+};
+
+exports.init = init;
 
 function deHyphenate(str) {
     return str.replace(/-(.)/g, function(m, m1) { return m1.toUpperCase(); });
@@ -4163,7 +4164,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
         if (!this.isMultiLine()) {
             if (row === this.start.row) {
                 return column < this.start.column ? -1 : (column > this.end.column ? 1 : 0);
-            }
+            };
         }
 
         if (row < this.start.row)
@@ -4240,7 +4241,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
     };
     this.collapseRows = function() {
         if (this.end.column == 0)
-            return new Range(this.start.row, 0, Math.max(this.start.row, this.end.row-1), 0);
+            return new Range(this.start.row, 0, Math.max(this.start.row, this.end.row-1), 0)
         else
             return new Range(this.start.row, 0, this.end.row, 0)
     };
@@ -5037,7 +5038,7 @@ var Tokenizer = function(rules) {
                 } else if (parenOpen) {
                     stack++;
                     if (parenOpen.length != 1) {
-                        lastCapture.stack = stack;
+                        lastCapture.stack = stack
                         lastCapture.start = index;
                     }
                 }
@@ -5054,7 +5055,7 @@ var Tokenizer = function(rules) {
             var stack = startState.slice(0);
             startState = stack[0];
             if (startState === "#tmp") {
-                stack.shift();
+                stack.shift()
                 startState = stack.shift()
             }
         } else
@@ -5403,7 +5404,7 @@ var Behaviour = function() {
               this.$behaviours[name] = {};
         }
         this.$behaviours[name][action] = callback;
-    };
+    }
     
     this.addBehaviours = function (behaviours) {
         for (var key in behaviours) {
@@ -5411,13 +5412,13 @@ var Behaviour = function() {
                 this.add(key, action, behaviours[key][action]);
             }
         }
-    };
+    }
     
     this.remove = function (name) {
         if (this.$behaviours && this.$behaviours[name]) {
             delete this.$behaviours[name];
         }
-    };
+    }
     
     this.inherit = function (mode, filter) {
         if (typeof mode === "function") {
@@ -5426,13 +5427,13 @@ var Behaviour = function() {
             var behaviours = mode.getBehaviours(filter);
         }
         this.addBehaviours(behaviours);
-    };
+    }
     
     this.getBehaviours = function (filter) {
         if (!filter) {
             return this.$behaviours;
         } else {
-            var ret = {};
+            var ret = {}
             for (var i = 0; i < filter.length; i++) {
                 if (this.$behaviours[filter[i]]) {
                     ret[filter[i]] = this.$behaviours[filter[i]];
@@ -5495,7 +5496,8 @@ function addUnicodePackage (pack) {
     var codePoint = /\w{4}/g;
     for (var name in pack)
         exports.packages[name] = pack[name].replace(codePoint, "\\u$&");
-}
+};
+
 });
 
 define("ace/token_iterator",["require","exports","module"], function(require, exports, module) {
@@ -6518,7 +6520,7 @@ var BackgroundTokenizer = function(tokenizer, editor) {
     this.scheduleStart = function() {
         if (!this.running)
             this.running = setTimeout(this.$worker, 700);
-    };
+    }
 
     this.$updateOnChange = function(delta) {
         var range = delta.range;
@@ -7061,7 +7063,7 @@ define("ace/edit_session/fold",["require","exports","module","ace/range","ace/ra
 
 var Range = require("../range").Range;
 var RangeList = require("../range_list").RangeList;
-var oop = require("../lib/oop");
+var oop = require("../lib/oop")
 var Fold = exports.Fold = function(range, placeholder) {
     this.foldLine = null;
     this.placeholder = placeholder;
@@ -7236,7 +7238,7 @@ function Folding() {
             var folds = this.getFoldsInRange(ranges);
         }
         return folds;
-    };
+    }
     this.getAllFolds = function() {
         var folds = [];
         var foldLines = this.$foldData;
@@ -7782,7 +7784,7 @@ function Folding() {
             range: i !== -1 && range,
             firstRange: firstRange
         };
-    };
+    }
 
     this.onFoldWidgetClick = function(row, e) {
         e = e.domEvent;
@@ -7794,7 +7796,7 @@ function Folding() {
         
         var range = this.$toggleFoldWidget(row, options);
         if (!range) {
-            var el = (e.target || e.srcElement);
+            var el = (e.target || e.srcElement)
             if (el && /ace_fold-widget/.test(el.className))
                 el.className += " ace_invalid";
         }
@@ -8105,7 +8107,7 @@ var EditSession = function(text, mode) {
     this.$foldData = [];
     this.$foldData.toString = function() {
         return this.join("\n");
-    };
+    }
     this.on("changeFold", this.onChangeFold.bind(this));
     this.$onChange = this.onChange.bind(this);
 
@@ -9125,7 +9127,7 @@ var EditSession = function(text, mode) {
             } else {
                 var args = Array(len);
                 args.unshift(firstRow, 0);
-                var arr = useWrapMode ? this.$wrapData : this.$rowLengthCache;
+                var arr = useWrapMode ? this.$wrapData : this.$rowLengthCache
                 arr.splice.apply(arr, args);
                 var foldLines = this.$foldData;
                 var foldLine = this.getFoldLine(firstRow);
@@ -9378,7 +9380,7 @@ var EditSession = function(text, mode) {
         if (this.lineWidgets)
             var h = this.lineWidgets[row] && this.lineWidgets[row].rowCount || 0;
         else 
-            h = 0;
+            h = 0
         if (!this.$useWrapMode || !this.$wrapData[row]) {
             return 1 + h;
         } else {
@@ -9669,7 +9671,8 @@ var EditSession = function(text, mode) {
                c >= 0xFE68 && c <= 0xFE6B ||
                c >= 0xFF01 && c <= 0xFF60 ||
                c >= 0xFFE0 && c <= 0xFFE6;
-    }
+    };
+
 }).call(EditSession.prototype);
 
 require("./edit_session/folding").Folding.call(EditSession.prototype);
@@ -13440,7 +13443,7 @@ var Text = function(parentEl) {
             this.EOL_CHAR = EOL_CHAR;
             return true;
         }
-    };
+    }
 
     this.setPadding = function(padding) {
         this.$padding = padding;
@@ -13461,7 +13464,7 @@ var Text = function(parentEl) {
             this._signal("changeCharacterSize", e);
         }.bind(this));
         this.$pollSizeChanges();
-    };
+    }
 
     this.checkForSizeChanges = function() {
         this.$fontMetrics.checkForSizeChanges();
@@ -13672,7 +13675,7 @@ var Text = function(parentEl) {
                 break;
 
             if (this.$useLineGroups())
-                html.push("<div class='ace_line_group' style='height:", config.lineHeight*this.session.getRowLength(row), "px'>");
+                html.push("<div class='ace_line_group' style='height:", config.lineHeight*this.session.getRowLength(row), "px'>")
 
             this.$renderLine(html, row, false, row == foldStart ? foldLine : false);
 
@@ -13846,7 +13849,7 @@ var Text = function(parentEl) {
 
         if (this.showInvisibles) {
             if (foldLine)
-                row = foldLine.end.row;
+                row = foldLine.end.row
 
             stringBuilder.push(
                 "<span class='ace_invisible ace_invisible_eol'>",
@@ -14409,7 +14412,7 @@ var FontMetrics = exports.FontMetrics = function(parentEl, interval) {
                rect = this.$measureNode.getBoundingClientRect();
             } catch(e) {
                rect = {width: 0, height:0 };
-            }
+            };
             var size = {
                 height: rect.height,
                 width: rect.width / CHAR_COUNT
@@ -14980,7 +14983,7 @@ var VirtualRenderer = function(container, theme) {
         this.session.$setFontMetrics(this.$fontMetrics);
         
         this.onChangeNewLineMode = this.onChangeNewLineMode.bind(this);
-        this.onChangeNewLineMode();
+        this.onChangeNewLineMode()
         this.session.doc.on("changeNewLineMode", this.onChangeNewLineMode);
     };
     this.updateLines = function(firstRow, lastRow, force) {
@@ -17086,7 +17089,7 @@ var Editor = require("./editor").Editor;
         if (this.inVirtualSelectionMode)
             return;
         var keepOrder = options && options.keepOrder;
-        var $byLines = options == true || options && options.$byLines;
+        var $byLines = options == true || options && options.$byLines
         var session = this.session;
         var selection = this.selection;
         var rangeList = selection.rangeList;
@@ -18262,7 +18265,7 @@ exports.createEditSession = function(text, mode) {
     var doc = new EditSession(text, mode);
     doc.setUndoManager(new UndoManager());
     return doc;
-};
+}
 exports.EditSession = EditSession;
 exports.UndoManager = UndoManager;
 });

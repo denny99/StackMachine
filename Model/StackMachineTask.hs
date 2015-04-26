@@ -6,12 +6,13 @@ import Import
 import Prelude (read)
 import qualified Data.Text as T
 import Model.Stack
+import Model.Formula
 
 instance ToJSON (Entity StackMachineTask) where
     toJSON (Entity tid t) = object
         [ "id"      .= (String $ toPathPiece tid)
-        , "initialStack"   .= (read (T.unpack (stackMachineTaskInitialStack t)) :: Stack)
-        , "targetStack"   .= (read (T.unpack (stackMachineTaskTargetStack t)) :: Stack)
+        , "initialStack"   .= arrayToStack (stackMachineTaskInitialStack t)
+        , "targetStack"    .= arrayToStack (stackMachineTaskTargetStack t)
         , "name"   .= stackMachineTaskName t
         , "desc"   .= stackMachineTaskDesc t
         ]
