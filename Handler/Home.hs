@@ -13,7 +13,7 @@ getHomeR :: Handler Html
 getHomeR =
     defaultLayout $ do
         setTitle "Welcome To Yesod!"
-        $(widgetFile "homepage")
+        $(widgetFile "homepage/homepage")
 
 postHomeR :: Handler Html
 postHomeR = error "Not used"

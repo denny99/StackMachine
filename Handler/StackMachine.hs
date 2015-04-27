@@ -8,7 +8,7 @@ import Model.StackMachine
 getStackMachineR :: Handler Html
 getStackMachineR = do
     setSession "key" siteSecret
-    defaultLayout $(widgetFile "stackMachine")
+    defaultLayout $(widgetFile "stackMachine/stackMachine")
 
 postStackMachineR :: Handler Value
 postStackMachineR = do
@@ -16,7 +16,6 @@ postStackMachineR = do
     let program = Request.program stackMachineRequest
     let programCounter = Request.programCounter stackMachineRequest
     let stack = Request.stack stackMachineRequest
-    print stackMachineRequest
     if Request.all stackMachineRequest == False
         then
             if programCounter < length program then

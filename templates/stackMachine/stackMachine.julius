@@ -69,14 +69,14 @@ function StackMachineModel() {
             type: "GET",
             success: function (data) {
                 self.backupStack = data.task.initialStack;
-                self.taskDesc(data.task.desc);
+                self.task(data.task);
                 self.resetProgram();
             },
             // this only refers to the data type of the *returned* data
             dataType: "json"
         });
     };
-    self.taskDesc = ko.observable("");
+    self.task= ko.observable("");
 
     //editor settings
     self.editor = ace.edit("editor");
@@ -190,6 +190,7 @@ function StackMachineModel() {
     };
     self.validateProgram = function() {
         update(true);
+        self.executeProgram();
         Messenger().ajax({
             successMessage: "Aufgabe gelöst",
             id: "validateProgram",

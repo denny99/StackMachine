@@ -47,7 +47,7 @@ instance Show Formula where
          (_, SUB _ _) -> show x ++ "/(" ++ show y ++ ")"
          (_, _) -> show x ++ "/" ++ show y
 
-parseFormula :: [Char] -> [Char] -> Int -> Formula
+parseFormula :: String -> String -> Int -> Formula
 parseFormula (x:xs) sx parCounter
     | x == '*'  && parCounter == 0 =
 		let term = findTerm xs [] 0 in
@@ -74,14 +74,14 @@ parseFormula (x:xs) sx parCounter
     | null xs = Value (sx ++ [x])
     | otherwise = parseFormula xs (sx ++ [x]) parCounter
 
-removePars :: [Char] -> [Char]
+removePars :: String -> String
 removePars string
     | P.head string == '(' && P.last string == ')' = P.tail (P.init string)
     | P.head string == '(' = P.tail string
     | P.last string == ')' = P.init string
     | otherwise = string
 
-findTerm :: [Char] -> [Char] -> Int -> [Char]
+findTerm :: String -> String -> Int -> String
 findTerm (x:xs) sx parCounter
     | x == '*'  && parCounter == 0 = sx
     | x == '/'  && parCounter == 0 = sx

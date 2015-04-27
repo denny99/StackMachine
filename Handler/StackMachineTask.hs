@@ -27,11 +27,10 @@ postStackMachineTaskR stackMachineTaskId = do
            body <- requireJsonBody :: Handler StackMachineTaskRequest
            let result = map expandFormula (stack (executeAll (arrayToStack (stackMachineTaskInitialStack task)) (program body) 0 0))
            let target = map expandFormula (arrayToStack (stackMachineTaskTargetStack task))
-           print result
-           print target
            if result /= target
                then
-                   sendResponseStatus status400 ("Ergebnis fehlerhaft" :: Text)
+                   if partialEq result target then sendResponseStatus status400 ("Zu viele Elemente im Stack (Tip: slide)" :: Text)
+                   else sendResponseStatus status400 ("Ergebnis fehlerhaft" :: Text)
                else
                    sendResponseStatus status200 ("Korrekt" :: Text)
 
