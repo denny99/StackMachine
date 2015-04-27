@@ -13,15 +13,15 @@
                             <button class="btn btn-success" type="button" data-bind="click: loadTask" data-toggle="tooltip" data-placement="top" title="Aufgabe starten">
                                 <span class="glyphicon glyphicon-floppy-open">
     <div class="row form-group well well-lg" data-bind="visible: taskDesc() !== ''">
-        <div class="col-xs-11" data-bind="text: taskDesc">
-        <div class="col-xs-1">
+        <div class="col-xs-10" data-bind="text: taskDesc">
+        <div class="col-xs-2">
             <button type="button" class="btn btn-success btn-block" data-bind="click: validateProgram" data-toggle="tooltip" data-placement="top" title="Ergebnis überprüfen">
                 <span class="glyphicon glyphicon-send">
     <div class="row form-group">
         <div class="col-xs-6 editor">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">SkriptEditor</h3>
+                    <h3 class="panel-title">SkriptEditor
                 <div class="panel-body remove padding">
                     <div id="editor" class="editor">
                 <div class="panel-footer">

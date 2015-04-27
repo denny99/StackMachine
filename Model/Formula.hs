@@ -1,4 +1,4 @@
-module Model.Formula where
+module Model.Formula (Formula(..), parseFormula, expandFormula) where
 
 import Import
 import qualified Prelude as P
@@ -13,6 +13,14 @@ instance FromJSON Formula where
 
 instance ToJSON Formula where
     toJSON formula = toJSON $ show formula
+
+instance Eq Formula where
+  Value a        == Value b =  a == b
+  ADD a1 a2 == ADD b1 b2    =  a1 == b1 && a2 == b2 || a2 == b1 && a1 == b2
+  MUL a1 a2 == MUL b1 b2    =  a1 == b1 && a2 == b2 || a2 == b1 && a1 == b2
+  DIV a1 a2 == DIV b1 b2    =  a1 == b1 && a2 == b2
+  SUB a1 a2 == SUB b1 b2    =  a1 == b1 && a2 == b2
+  _              == _               =  False
 
 instance Show Formula where
     show (Value x) = x
@@ -39,62 +47,64 @@ instance Show Formula where
          (_, SUB _ _) -> show x ++ "/(" ++ show y ++ ")"
          (_, _) -> show x ++ "/" ++ show y
 
+parseFormula :: [Char] -> [Char] -> Int -> Formula
 parseFormula (x:xs) sx parCounter
-    | x == '*'  && parCounter == 0 = MUL (parseFormula (removePars sx) [] 0) (parseFormula (removePars xs) [] 0)
-    | x == '/'  && parCounter == 0 = DIV (parseFormula (removePars sx) [] 0) (parseFormula (removePars xs) [] 0)
+    | x == '*'  && parCounter == 0 =
+		let term = findTerm xs [] 0 in
+			if length term == length xs then
+				MUL (parseFormula (removePars sx) [] 0) (parseFormula (removePars xs) [] 0)
+			else
+				parseFormula xs (sx ++ [x]) parCounter
+    | x == '/'  && parCounter == 0 =
+		let term = findTerm xs [] 0 in
+				if length term == length xs then
+					DIV (parseFormula (removePars sx) [] 0) (parseFormula (removePars xs) [] 0)
+				else
+					parseFormula xs (sx ++ [x]) parCounter
     | x == '+'  && parCounter == 0 = ADD (parseFormula (removePars sx) [] 0) (parseFormula (removePars xs) [] 0)
-    | x == '-'  && parCounter == 0 = SUB (parseFormula (removePars sx) [] 0) (parseFormula (removePars xs) [] 0)
+    | x == '-'  && parCounter == 0 =
+				let term = findTerm xs [] 0 in
+					if length term == length xs then
+						SUB (parseFormula (removePars sx) [] 0) (parseFormula (removePars xs) [] 0)
+					else
+						parseFormula xs (sx ++ [x]) parCounter
     | x == '(' = parseFormula xs (sx ++ [x]) (parCounter + 1)
+	| x == ')' && parCounter == 1 && null xs = parseFormula (P.tail sx) [] 0
     | x == ')' && parCounter /= 0 = parseFormula xs (sx ++ [x]) (parCounter - 1)
     | null xs = Value (sx ++ [x])
     | otherwise = parseFormula xs (sx ++ [x]) parCounter
 
+removePars :: [Char] -> [Char]
 removePars string
     | P.head string == '(' && P.last string == ')' = P.tail (P.init string)
     | P.head string == '(' = P.tail string
     | P.last string == ')' = P.init string
     | otherwise = string
 
-findMin (Value x) = x
-findMin (MUL x y) =
-    if findMin x < findMin y then
-        findMin x
-    else
-        findMin y
-findMin (DIV x y) =
-    if findMin x < findMin y then
-        findMin x
-    else
-        findMin y
-findMin (SUB x y) =
-    if findMin x < findMin y then
-        findMin x
-    else
-        findMin y
-findMin (ADD x y) =
-    if findMin x < findMin y then
-        findMin x
-    else
-        findMin y
+findTerm :: [Char] -> [Char] -> Int -> [Char]
+findTerm (x:xs) sx parCounter
+    | x == '*'  && parCounter == 0 = sx
+    | x == '/'  && parCounter == 0 = sx
+    | x == '+'  && parCounter == 0 = sx
+    | x == '-'  && parCounter == 0 = sx
+    | x == '(' = findTerm xs (sx ++ [x]) (parCounter + 1)
+	| x == ')' && parCounter == 1 && null xs = sx ++ [x]
+	| x == ')' && parCounter /= 0 = findTerm xs (sx ++ [x]) (parCounter - 1)
+    | null xs = sx ++ [x]
+    | otherwise = findTerm xs (sx ++ [x]) parCounter
 
-sortFormula (Value x) = Value x
-sortFormula (MUL x y) =
-    if findMin x < findMin y then
-        MUL (sortFormula x) (sortFormula y)
-    else
-        MUL (sortFormula y) (sortFormula x)
-sortFormula (DIV x y) =
-    if findMin x < findMin y then
-        DIV (sortFormula x) (sortFormula y)
-    else
-        DIV (sortFormula y) (sortFormula x)
-sortFormula (SUB x y) =
-    if findMin x < findMin y then
-        SUB (sortFormula x) (sortFormula y)
-    else
-        SUB (sortFormula y) (sortFormula x)
-sortFormula (ADD x y) =
-    if findMin x < findMin y then
-        ADD (sortFormula x) (sortFormula y)
-    else
-        ADD (sortFormula y) (sortFormula x)
+expandFormula :: Formula -> Formula
+expandFormula (MUL (ADD x y) z) = ADD (expandFormula (MUL z x))  (expandFormula (MUL z y))
+expandFormula (MUL z (ADD x y)) = ADD (expandFormula (MUL z x))  (expandFormula (MUL z y))
+expandFormula (MUL (SUB x y) z) = SUB (expandFormula (MUL z x))  (expandFormula (MUL z y))
+expandFormula (MUL z (SUB x y)) = SUB (expandFormula (MUL z x))  (expandFormula (MUL z y))
+expandFormula (MUL x y) = MUL (expandFormula x) (expandFormula y)
+
+expandFormula (DIV (ADD x y) z) = ADD (expandFormula (DIV x z))  (expandFormula (DIV y z))
+expandFormula (DIV (SUB x y) z) = SUB (expandFormula (DIV x z))  (expandFormula (DIV y z))
+expandFormula (DIV x y) = DIV (expandFormula x) (expandFormula y)
+
+expandFormula (SUB x (ADD y z)) = SUB (expandFormula x) (expandFormula (SUB y z))
+expandFormula (SUB x y) = SUB (expandFormula x) (expandFormula y)
+expandFormula (ADD x y) = ADD (expandFormula x) (expandFormula y)
+expandFormula (Value x) = Value x

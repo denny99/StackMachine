@@ -3,10 +3,8 @@
 module Model.StackMachineTask where
 
 import Import
-import Prelude (read)
 import qualified Data.Text as T
 import Model.Stack
-import Model.Formula
 
 instance ToJSON (Entity StackMachineTask) where
     toJSON (Entity tid t) = object

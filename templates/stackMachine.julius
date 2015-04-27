@@ -205,12 +205,12 @@ function StackMachineModel() {
             data: JSON.stringify({
                 program: self.program()
             }),
-            error: function(data) {
-                console.log(data);
-                return data.responseText;
+            success: function(data) {
+                console.log("success");
             },
-            // this only refers to the data type of the *returned* data
-            dataType: "json"
+            error: function(data) {
+                return data.responseText;
+            }
         });
     };
 

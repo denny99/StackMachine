@@ -1,8 +1,6 @@
 module Handler.StackMachineTask where
 
 import Import
-import Prelude (read)
-import qualified Data.Text as T
 import Model.Stack
 import Model.StackMachine
 import Model.StackMachineTask()
@@ -27,7 +25,11 @@ postStackMachineTaskR stackMachineTaskId = do
        else do
            task <- runDB $ get404 stackMachineTaskId
            body <- requireJsonBody :: Handler StackMachineTaskRequest
-           if show (stack (executeAll (arrayToStack (stackMachineTaskInitialStack task)) (program body) 0 0)) /= show (arrayToStack (stackMachineTaskTargetStack task))
+           let result = map expandFormula (stack (executeAll (arrayToStack (stackMachineTaskInitialStack task)) (program body) 0 0))
+           let target = map expandFormula (arrayToStack (stackMachineTaskTargetStack task))
+           print result
+           print target
+           if result /= target
                then
                    sendResponseStatus status400 ("Ergebnis fehlerhaft" :: Text)
                else
