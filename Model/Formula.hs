@@ -51,21 +51,26 @@ instance Eq Formula where
 parseFormula :: String -> String -> Int -> Formula
 parseFormula (x:xs) sx parCounter
     | x == '*'  && parCounter == 0 =
-        let term = findTerm xs [] 0 in
-            if length term == length xs then
-                    MUL (parseFormula (removePars sx) [] 0) (parseFormula (removePars xs) [] 0)
-            else
-                    parseFormula xs (sx ++ [x]) parCounter
+		let term = findTerm xs [] 0 in
+			if length term == length xs then
+				MUL (parseFormula (removePars sx) [] 0) (parseFormula (removePars xs) [] 0)
+			else
+				parseFormula xs (sx ++ [x]) parCounter
     | x == '/'  && parCounter == 0 =
-        let term = findTerm xs [] 0 in
-            if length term == length xs then
-                    DIV (parseFormula (removePars sx) [] 0) (parseFormula (removePars xs) [] 0)
-            else
-                    parseFormula xs (sx ++ [x]) parCounter
+		let term = findTerm xs [] 0 in
+				if length term == length xs then
+					DIV (parseFormula (removePars sx) [] 0) (parseFormula (removePars xs) [] 0)
+				else
+					parseFormula xs (sx ++ [x]) parCounter
     | x == '+'  && parCounter == 0 = ADD (parseFormula (removePars sx) [] 0) (parseFormula (removePars xs) [] 0)
-    | x == '-'  && parCounter == 0 = SUB (parseFormula (removePars sx) [] 0) (parseFormula (removePars xs) [] 0)
+    | x == '-'  && parCounter == 0 =
+		let term = findTerm xs [] 0 in
+			if length term == length xs || isDIV (parseFormula xs [] 0) || isMUL (parseFormula xs [] 0) then
+				SUB (parseFormula (removePars sx) [] 0) (parseFormula (removePars xs) [] 0)
+			else
+				parseFormula xs (sx ++ [x]) parCounter
     | x == '(' = parseFormula xs (sx ++ [x]) (parCounter + 1)
-    | x == ')' && parCounter == 1 && null xs = parseFormula (P.tail sx) [] 0
+	| x == ')' && parCounter == 1 && null xs = parseFormula (P.tail sx) [] 0
     | x == ')' && parCounter /= 0 = parseFormula xs (sx ++ [x]) (parCounter - 1)
     | null xs = Value (sx ++ [x])
     | otherwise = parseFormula xs (sx ++ [x]) parCounter
@@ -84,8 +89,8 @@ findTerm (x:xs) sx parCounter
     | x == '+'  && parCounter == 0 = sx
     | x == '-'  && parCounter == 0 = sx
     | x == '(' = findTerm xs (sx ++ [x]) (parCounter + 1)
-    | x == ')' && parCounter == 1 && null xs = sx ++ [x]
-    | x == ')' && parCounter /= 0 = findTerm xs (sx ++ [x]) (parCounter - 1)
+	| x == ')' && parCounter == 1 && null xs = sx ++ [x]
+	| x == ')' && parCounter /= 0 = findTerm xs (sx ++ [x]) (parCounter - 1)
     | null xs = sx ++ [x]
     | otherwise = findTerm xs (sx ++ [x]) parCounter
 
@@ -104,3 +109,8 @@ expandFormula (SUB x (ADD y z)) = expandFormula $ SUB (expandFormula x) (expandF
 expandFormula (SUB x y) = SUB (expandFormula x) (expandFormula y)
 expandFormula (ADD x y) = ADD (expandFormula x) (expandFormula y)
 expandFormula (Value x) = Value x
+
+isMUL (MUL x y) = True
+isMUL _ = False
+isDIV (DIV x y) = True
+isDIV _ = False
