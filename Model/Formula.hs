@@ -48,44 +48,44 @@ instance Eq Formula where
   SUB a1 a2 == SUB b1 b2    =  a1 == b1 && a2 == b2
   _              == _               =  False
 
-parseFormula :: [Char] -> [Char] -> Int -> Formula
+parseFormula :: String -> String -> Int -> Formula
 parseFormula (x:xs) sx parCounter
     | x == '*'  && parCounter == 0 =
-		let term = findTerm xs [] 0 in
-			if length term == length xs then
-				MUL (parseFormula (removePars sx) [] 0) (parseFormula (removePars xs) [] 0)
-			else
-				parseFormula xs (sx ++ [x]) parCounter
+        let term = findTerm xs [] 0 in
+            if length term == length xs then
+                    MUL (parseFormula (removePars sx) [] 0) (parseFormula (removePars xs) [] 0)
+            else
+                    parseFormula xs (sx ++ [x]) parCounter
     | x == '/'  && parCounter == 0 =
-		let term = findTerm xs [] 0 in
-				if length term == length xs then
-					DIV (parseFormula (removePars sx) [] 0) (parseFormula (removePars xs) [] 0)
-				else
-					parseFormula xs (sx ++ [x]) parCounter
+        let term = findTerm xs [] 0 in
+            if length term == length xs then
+                    DIV (parseFormula (removePars sx) [] 0) (parseFormula (removePars xs) [] 0)
+            else
+                    parseFormula xs (sx ++ [x]) parCounter
     | x == '+'  && parCounter == 0 = ADD (parseFormula (removePars sx) [] 0) (parseFormula (removePars xs) [] 0)
     | x == '-'  && parCounter == 0 = SUB (parseFormula (removePars sx) [] 0) (parseFormula (removePars xs) [] 0)
     | x == '(' = parseFormula xs (sx ++ [x]) (parCounter + 1)
-	| x == ')' && parCounter == 1 && null xs = parseFormula (P.tail sx) [] 0
+    | x == ')' && parCounter == 1 && null xs = parseFormula (P.tail sx) [] 0
     | x == ')' && parCounter /= 0 = parseFormula xs (sx ++ [x]) (parCounter - 1)
     | null xs = Value (sx ++ [x])
     | otherwise = parseFormula xs (sx ++ [x]) parCounter
 
-removePars :: [Char] -> [Char]
+removePars :: String -> String
 removePars string
     | P.head string == '(' && P.last string == ')' = P.tail (P.init string)
     | P.head string == '(' = P.tail string
     | P.last string == ')' = P.init string
     | otherwise = string
 
-findTerm :: [Char] -> [Char] -> Int -> [Char]
+findTerm :: String -> String -> Int -> String
 findTerm (x:xs) sx parCounter
     | x == '*'  && parCounter == 0 = sx
     | x == '/'  && parCounter == 0 = sx
     | x == '+'  && parCounter == 0 = sx
     | x == '-'  && parCounter == 0 = sx
     | x == '(' = findTerm xs (sx ++ [x]) (parCounter + 1)
-	| x == ')' && parCounter == 1 && null xs = sx ++ [x]
-	| x == ')' && parCounter /= 0 = findTerm xs (sx ++ [x]) (parCounter - 1)
+    | x == ')' && parCounter == 1 && null xs = sx ++ [x]
+    | x == ')' && parCounter /= 0 = findTerm xs (sx ++ [x]) (parCounter - 1)
     | null xs = sx ++ [x]
     | otherwise = findTerm xs (sx ++ [x]) parCounter
 

@@ -207,7 +207,7 @@ function StackMachineModel() {
                 program: self.program()
             }),
             success: function(data) {
-                console.log("success");
+                return data;
             },
             error: function(data) {
                 return data.responseText;
