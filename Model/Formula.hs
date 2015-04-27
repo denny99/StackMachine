@@ -14,17 +14,10 @@ instance FromJSON Formula where
 instance ToJSON Formula where
     toJSON formula = toJSON $ show formula
 
-instance Eq Formula where
-  Value a        == Value b =  a == b
-  ADD a1 a2 == ADD b1 b2    =  a1 == b1 && a2 == b2 || a2 == b1 && a1 == b2
-  MUL a1 a2 == MUL b1 b2    =  a1 == b1 && a2 == b2 || a2 == b1 && a1 == b2
-  DIV a1 a2 == DIV b1 b2    =  a1 == b1 && a2 == b2
-  SUB a1 a2 == SUB b1 b2    =  a1 == b1 && a2 == b2
-  _              == _               =  False
-
 instance Show Formula where
     show (Value x) = x
     show (ADD x y) = show x ++ "+" ++ show y
+    show (SUB x (ADD y z)) = show x ++ "-(" ++ show (ADD y z) ++ ")"
     show (SUB x y) = show x ++ "-" ++ show y
     show (MUL x y) = case (x, y) of
         (ADD _ _, ADD _ _) -> "(" ++ show x ++ ")*(" ++ show y ++ ")"
@@ -47,7 +40,15 @@ instance Show Formula where
          (_, SUB _ _) -> show x ++ "/(" ++ show y ++ ")"
          (_, _) -> show x ++ "/" ++ show y
 
-parseFormula :: String -> String -> Int -> Formula
+instance Eq Formula where
+  Value a        == Value b =  a == b
+  ADD a1 a2 == ADD b1 b2    =  a1 == b1 && a2 == b2 || a2 == b1 && a1 == b2
+  MUL a1 a2 == MUL b1 b2    =  a1 == b1 && a2 == b2 || a2 == b1 && a1 == b2
+  DIV a1 a2 == DIV b1 b2    =  a1 == b1 && a2 == b2
+  SUB a1 a2 == SUB b1 b2    =  a1 == b1 && a2 == b2
+  _              == _               =  False
+
+parseFormula :: [Char] -> [Char] -> Int -> Formula
 parseFormula (x:xs) sx parCounter
     | x == '*'  && parCounter == 0 =
 		let term = findTerm xs [] 0 in
@@ -62,26 +63,21 @@ parseFormula (x:xs) sx parCounter
 				else
 					parseFormula xs (sx ++ [x]) parCounter
     | x == '+'  && parCounter == 0 = ADD (parseFormula (removePars sx) [] 0) (parseFormula (removePars xs) [] 0)
-    | x == '-'  && parCounter == 0 =
-				let term = findTerm xs [] 0 in
-					if length term == length xs then
-						SUB (parseFormula (removePars sx) [] 0) (parseFormula (removePars xs) [] 0)
-					else
-						parseFormula xs (sx ++ [x]) parCounter
+    | x == '-'  && parCounter == 0 = SUB (parseFormula (removePars sx) [] 0) (parseFormula (removePars xs) [] 0)
     | x == '(' = parseFormula xs (sx ++ [x]) (parCounter + 1)
 	| x == ')' && parCounter == 1 && null xs = parseFormula (P.tail sx) [] 0
     | x == ')' && parCounter /= 0 = parseFormula xs (sx ++ [x]) (parCounter - 1)
     | null xs = Value (sx ++ [x])
     | otherwise = parseFormula xs (sx ++ [x]) parCounter
 
-removePars :: String -> String
+removePars :: [Char] -> [Char]
 removePars string
     | P.head string == '(' && P.last string == ')' = P.tail (P.init string)
     | P.head string == '(' = P.tail string
     | P.last string == ')' = P.init string
     | otherwise = string
 
-findTerm :: String -> String -> Int -> String
+findTerm :: [Char] -> [Char] -> Int -> [Char]
 findTerm (x:xs) sx parCounter
     | x == '*'  && parCounter == 0 = sx
     | x == '/'  && parCounter == 0 = sx
@@ -94,17 +90,17 @@ findTerm (x:xs) sx parCounter
     | otherwise = findTerm xs (sx ++ [x]) parCounter
 
 expandFormula :: Formula -> Formula
-expandFormula (MUL (ADD x y) z) = ADD (expandFormula (MUL z x))  (expandFormula (MUL z y))
-expandFormula (MUL z (ADD x y)) = ADD (expandFormula (MUL z x))  (expandFormula (MUL z y))
-expandFormula (MUL (SUB x y) z) = SUB (expandFormula (MUL z x))  (expandFormula (MUL z y))
-expandFormula (MUL z (SUB x y)) = SUB (expandFormula (MUL z x))  (expandFormula (MUL z y))
+expandFormula (MUL (ADD x y) z) = expandFormula $ ADD (expandFormula (MUL z x))  (expandFormula (MUL z y))
+expandFormula (MUL z (ADD x y)) = expandFormula $ ADD (expandFormula (MUL z x))  (expandFormula (MUL z y))
+expandFormula (MUL (SUB x y) z) = expandFormula $ SUB (expandFormula (MUL z x))  (expandFormula (MUL z y))
+expandFormula (MUL z (SUB x y)) = expandFormula $ SUB (expandFormula (MUL z x))  (expandFormula (MUL z y))
 expandFormula (MUL x y) = MUL (expandFormula x) (expandFormula y)
 
-expandFormula (DIV (ADD x y) z) = ADD (expandFormula (DIV x z))  (expandFormula (DIV y z))
-expandFormula (DIV (SUB x y) z) = SUB (expandFormula (DIV x z))  (expandFormula (DIV y z))
+expandFormula (DIV (ADD x y) z) = expandFormula $ ADD (expandFormula (DIV x z))  (expandFormula (DIV y z))
+expandFormula (DIV (SUB x y) z) = expandFormula $ SUB (expandFormula (DIV x z))  (expandFormula (DIV y z))
 expandFormula (DIV x y) = DIV (expandFormula x) (expandFormula y)
 
-expandFormula (SUB x (ADD y z)) = SUB (expandFormula x) (expandFormula (SUB y z))
+expandFormula (SUB x (ADD y z)) = expandFormula $ SUB (expandFormula x) (expandFormula (SUB y z))
 expandFormula (SUB x y) = SUB (expandFormula x) (expandFormula y)
 expandFormula (ADD x y) = ADD (expandFormula x) (expandFormula y)
 expandFormula (Value x) = Value x

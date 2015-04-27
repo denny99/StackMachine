@@ -22,7 +22,7 @@ define('ace/mode/stackMachine_highlight_rules', ["require", "exports", "module",
                 {defaultToken: "invalid"}
             ],
             "word": [
-                {token: "string.quoted.double.bold", regex: /[a-zA-Z_]*$/, next: "start"},
+                {token: "string.quoted.double.bold", regex: /[a-zA-Z_]*[0-9]*$/, next: "start"},
                 {defaultToken: "invalid"}
             ],
             "slideInput": [

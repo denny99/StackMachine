@@ -25,12 +25,16 @@ postStackMachineTaskR stackMachineTaskId = do
        else do
            task <- runDB $ get404 stackMachineTaskId
            body <- requireJsonBody :: Handler StackMachineTaskRequest
-           let result = map expandFormula (stack (executeAll (arrayToStack (stackMachineTaskInitialStack task)) (program body) 0 0))
-           let target = map expandFormula (arrayToStack (stackMachineTaskTargetStack task))
-           if result /= target
+           let result = stack (executeAll (arrayToStack (stackMachineTaskInitialStack task)) (program body) 0 0)
+           let target = arrayToStack (stackMachineTaskTargetStack task)
+           if show result /= show target
                then
-                   if partialEq result target then sendResponseStatus status400 ("Zu viele Elemente im Stack (Tip: slide)" :: Text)
-                   else sendResponseStatus status400 ("Ergebnis fehlerhaft" :: Text)
+                   if map expandFormula result /= map expandFormula target
+                       then
+                           if partialEq result target then sendResponseStatus status400 ("Zu viele Elemente im Stack (Tip: slide)" :: Text)
+                           else sendResponseStatus status400 ("Ergebnis fehlerhaft" :: Text)
+                       else
+                           sendResponseStatus status200 ("Fast Korrekt. Anordnung korrigieren" :: Text)
                else
                    sendResponseStatus status200 ("Korrekt" :: Text)
 
