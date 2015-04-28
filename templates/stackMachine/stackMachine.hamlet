@@ -40,11 +40,11 @@
                             <span class="glyphicon glyphicon-repeat">
                         <a type="button" class="btn btn-primary" data-bind="click: undoCommand, attr: {disabled: programCounter() == 0}" data-toggle="tooltip" data-placement="top" title="Schritt zurück">
                             <span class="glyphicon glyphicon-chevron-left">
-                        <a type="button" class="btn btn-primary" data-bind="click: executeCommand, attr: {disabled: disableContinue}" data-toggle="tooltip" data-placement="top" title="Schrittweise ausführen">
+                        <a type="button" class="btn btn-primary" data-bind="click: executeCommand, attr: {disabled: disableContinue() || running()}" data-toggle="tooltip" data-placement="top" title="Schrittweise ausführen">
                             <span class="glyphicon glyphicon-chevron-right">
-                        <a type="button" class="btn btn-primary" data-bind="click: executeProgram" data-toggle="tooltip" data-placement="top" title="Alles ausführen">
+                        <a type="button" class="btn btn-primary" data-bind="click: executeProgram, attr: {disabled: program().length === 0 || running()}" data-toggle="tooltip" data-placement="top" title="Alles ausführen">
                             <span class="glyphicon glyphicon-play">
-                        <a type="button" class="btn btn-success btn-block" data-bind="click: validateProgram, visible: task" data-toggle="tooltip" data-placement="top" title="Ergebnis überprüfen">
+                        <a type="button" class="btn btn-success btn-block" data-bind="click: validateProgram, visible: task, attr: {disabled: program().length === 0 || running()}" data-toggle="tooltip" data-placement="top" title="Ergebnis überprüfen">
                             <span class="glyphicon glyphicon-send">
         <div class="col-xs-6 stackTable">
             <table class="table table-hover">

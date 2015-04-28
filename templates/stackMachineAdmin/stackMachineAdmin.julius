@@ -139,8 +139,7 @@ function StackMachineAdminModel() {
 }
 
 $(document).ready(function() {
-    var stackMachineModel = new StackMachineAdminModel();
-    ko.applyBindings(stackMachineModel, document.getElementById("main"));
+    ko.applyBindings(new StackMachineAdminModel(), document.getElementById("main"));
     initTooltips();
     $("#main").fadeIn();
 });

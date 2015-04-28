@@ -5,4 +5,6 @@ import Import
 getStackMachineAdminR :: Handler Html
 getStackMachineAdminR = do
     setSession "key" siteSecret
-    defaultLayout $(widgetFile "stackMachineAdmin/stackMachineAdmin")
+    defaultLayout $ do
+        setTitle "Aufgaben"
+        $(widgetFile "stackMachineAdmin/stackMachineAdmin")

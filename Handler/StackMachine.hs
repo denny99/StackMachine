@@ -8,7 +8,9 @@ import Model.StackMachine
 getStackMachineR :: Handler Html
 getStackMachineR = do
     setSession "key" siteSecret
-    defaultLayout $(widgetFile "stackMachine/stackMachine")
+    defaultLayout $ do
+        setTitle "Simulator"
+        $(widgetFile "stackMachine/stackMachine")
 
 postStackMachineR :: Handler Value
 postStackMachineR = do
