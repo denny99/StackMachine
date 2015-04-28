@@ -53,10 +53,11 @@ function StackMachineModel() {
             dataType: "json"
         });
     }
+
     loadTasks();
     self.tasks = ko.observableArray([]);
     self.selectedTask = ko.observable();
-    self.loadTask = function() {
+    self.loadTask = function () {
         Messenger().ajax({
             errorMessage: "Laden der Aufgabe fehlgeschlagen",
             id: "loadTask"
@@ -76,7 +77,7 @@ function StackMachineModel() {
             dataType: "json"
         });
     };
-    self.task= ko.observable("");
+    self.task = ko.observable("");
 
     //editor settings
     self.editor = ace.edit("editor");
@@ -93,6 +94,7 @@ function StackMachineModel() {
     self.program = ko.observableArray([]);
     self.backupStack = ["5"];
     self.stack = ko.observableArray(["5"]);
+    self.stackHistory = [self.backupStack];
 
     //API actions
     function update(removeBlank) {
@@ -108,51 +110,69 @@ function StackMachineModel() {
             }
         });
     }
-    self.reset = function() {
+
+    self.reset = function () {
         self.editor.selectAll();
         self.editor.removeLines();
         self.programCounter(0);
+        self.stackHistory = [];
         self.editor.gotoLine(0);
     };
-    self.resetProgram = function() {
+    self.resetProgram = function () {
         self.stack(self.backupStack);
+        self.stackHistory = [];
         self.programCounter(0);
         self.editor.gotoLine(0);
     };
+
+    var executed = false;
+    self.undoCommand = function () {
+        if (executed) {
+            self.stackHistory.pop();
+            executed = false;
+        }
+        self.stack(self.stackHistory.length == 0 ? self.backupStack : self.stackHistory.pop());
+        self.programCounter(self.programCounter() - 1);
+        self.editor.gotoLine(self.programCounter() + 1);
+    };
+
     self.executeCommand = function () {
         update(true);
         Messenger().ajax({
-            errorMessage: "Fehlerhafter Code",
-            id: "executeCommand",
-            retry: false
-        },
+                errorMessage: "Fehlerhafter Code",
+                id: "executeCommand",
+                retry: false
+            },
             {
-            // sending a JSON encoded body
-            contentType: "application/json",
-            // don't process the body, we'll render data into a valid string
-            processData: false,
-            url: "@{StackMachineR}",
-            type: "POST",
-            // notice the usage of stringify here
-            data: JSON.stringify({
-                stack: self.stack(),
-                program: self.program(),
-                programCounter: self.programCounter(),
-                all: false
-            }),
-            success: function (data) {
-                self.stack(data.stack);
-                self.programCounter(data.programCounter);
-                //highlight current line
-                self.editor.gotoLine(data.programCounter + 1);
-            },
-            error: function(data) {
-                self.editor.gotoLine(self.programCounter() + 1);
-                return data.responseJSON.error;
-            },
-            // this only refers to the data type of the *returned* data
-            dataType: "json"
-        });
+                // sending a JSON encoded body
+                contentType: "application/json",
+                // don't process the body, we'll render data into a valid string
+                processData: false,
+                url: "@{StackMachineR}",
+                type: "POST",
+                // notice the usage of stringify here
+                data: JSON.stringify({
+                    stack: self.stack(),
+                    program: self.program(),
+                    programCounter: self.programCounter(),
+                    all: false
+                }),
+                success: function (data) {
+                    self.stack(data.stack);
+                    self.stackHistory.push(data.stack);
+                    executed = true;
+                    console.log(self.stackHistory);
+                    self.programCounter(data.programCounter);
+                    //highlight current line
+                    self.editor.gotoLine(data.programCounter + 1);
+                },
+                error: function (data) {
+                    self.editor.gotoLine(self.programCounter() + 1);
+                    return data.responseJSON.error;
+                },
+                // this only refers to the data type of the *returned* data
+                dataType: "json"
+            });
     };
     self.executeProgram = function () {
         self.resetProgram();
@@ -181,14 +201,14 @@ function StackMachineModel() {
                 //highlight current line
                 self.editor.gotoLine(data.programCounter + 1);
             },
-            error: function(data) {
+            error: function (data) {
                 return data.responseJSON.error;
             },
             // this only refers to the data type of the *returned* data
             dataType: "json"
         });
     };
-    self.validateProgram = function() {
+    self.validateProgram = function () {
         update(true);
         self.executeProgram();
         Messenger().ajax({
@@ -206,22 +226,71 @@ function StackMachineModel() {
             data: JSON.stringify({
                 program: self.program()
             }),
-            success: function(data) {
+            success: function (data) {
                 return data;
             },
-            error: function(data) {
+            error: function (data) {
                 return data.responseText;
             }
         });
     };
 
-    self.disableContinue = ko.computed(function() {
-       return self.program().length <= self.programCounter();
+    self.disableContinue = ko.computed(function () {
+        return self.program().length <= self.programCounter();
     });
+
+    //file management
+    self.saveScript = function () {
+        var csv = "";
+        var lines = self.editor.getSession().getDocument().getAllLines();
+        lines.forEach(function (line, i) {
+            if (i == lines.length - 1) {
+                csv += line
+            }
+            else {
+                csv += line + ";"
+            }
+        });
+        var blob = new Blob([csv], {type: "text/csv"});
+        saveAs(blob, "stackMachine.script");
+    };
+
+    self.loadScript = function () {
+        document.getElementById('loadScript').click();
+    };
+
+    //load file
+    function handleFileSelect(evt) {
+        var files = evt.target.files; // FileList object
+        console.log(files);
+
+        // Loop through the FileList and render image files as thumbnails.
+        for (var i = 0, f; f = files[i]; i++) {
+
+            // Only process image files.
+            if (!/.*\.script$/.test("stackMachine.script")) {
+                continue;
+            }
+
+            var reader = new FileReader();
+
+            reader.onload = (function (theFile) {
+                return function (e) {
+                    self.reset();
+                    self.editor.getSession().getDocument().insertLines(0, e.target.result.split(";"));
+                };
+            })(f);
+
+            reader.readAsText(f);
+        }
+    }
+
+    document.getElementById('loadScript').addEventListener('change', handleFileSelect, false);
 }
 var stackMachineModel = new StackMachineModel();
-$(document).ready(function() {
+$(document).ready(function () {
     ko.applyBindings(stackMachineModel, document.getElementById("main"));
     initTooltips();
+
     $("#main").fadeIn();
 });

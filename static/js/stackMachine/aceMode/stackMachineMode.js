@@ -16,7 +16,7 @@ define('ace/mode/stackMachine_highlight_rules', ["require", "exports", "module",
                 {token: "keyword.operator", regex: /\*/},
                 {token: "keyword.operator", regex: /\//},
                 {token: "storage.type", regex: /print$/},
-                {token: "keyword.control", regex: /[a-zA-Z_]*\.$/},
+                {token: "keyword.control", regex: /[a-zA-Z_]*[0-9]*\.$/},
                 {token: "keyword.control", regex: "branchz ", next: "word"},
                 {token: "keyword.control", regex: "jump ", next: "word"},
                 {defaultToken: "invalid"}

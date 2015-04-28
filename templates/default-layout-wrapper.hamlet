@@ -24,18 +24,19 @@ $newline never
 
     <script>
         document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/,'js');
-    <script type="text/javascript" src="/static/js/frameworks/jquery.min.js">
-    <script type="text/javascript" src="/static/js/frameworks/ace/ace.js">
-    <script type="text/javascript" src="/static/js/frameworks/ace/theme-tomorrow.js">
-    <script type="text/javascript" src="/static/js/frameworks/knockout-3.3.0.js">
-    <script type="text/javascript" src="/static/js/frameworks/bootstrap.min.js">
-    <script type="text/javascript" src="/static/js/frameworks/messenger.min.js">
-    <script type="text/javascript" src="/static/js/stackMachine/aceMode/stackMachineMode.js">
+    <script; type="text/javascript"; src="/static/js/frameworks/jquery.min.js">
+    <script; type="text/javascript"; src="/static/js/frameworks/ace/ace.js">
+    <script; type="text/javascript"; src="/static/js/frameworks/ace/theme-tomorrow.js">
+    <script; type="text/javascript"; src="/static/js/frameworks/knockout-3.3.0.js">
+    <script; type="text/javascript"; src="/static/js/frameworks/bootstrap.min.js">
+    <script; type="text/javascript"; src="/static/js/frameworks/messenger.min.js">
+    <script; type="text/javascript"; src="/static/js/frameworks/FileSaver.min.js">
+    <script; type="text/javascript"; src="/static/js/stackMachine/aceMode/stackMachineMode.js">
   <body>
-      ^{pageBody pc}
+      ^{pageBody pc};
 
-    $maybe analytics <- appAnalytics $ appSettings master
-      <script>
+    $maybe; analytics <- appAnalytics; $; appSettings; master
+      <script>;
         if(!window.location.href.match(/localhost/)){
           window._gaq = [['_setAccount','#{analytics}'],['_trackPageview'],['_trackPageLoadTime']];
           (function() {
