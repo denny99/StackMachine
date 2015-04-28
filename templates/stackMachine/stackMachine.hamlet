@@ -70,7 +70,7 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th> Befehl
+                                <th style="width: 110px;"> Befehl
                                 <th> Beschreibung
                         <tbody>
                             <tr>

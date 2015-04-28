@@ -35,7 +35,7 @@ $newline never
   <body>
       ^{pageBody pc}
 
-    $maybe; analytics <- appAnalytics $ appSettings master
+    $maybe analytics <- appAnalytics $ appSettings master
       <script>
         if(!window.location.href.match(/localhost/)){
           window._gaq = [['_setAccount','#{analytics}'],['_trackPageview'],['_trackPageLoadTime']];
