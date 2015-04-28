@@ -1,5 +1,5 @@
 <div id="main" class="container" style="display: none">
-    <input id="loadScript" type="file" style="display: none">
+    <input id="loadScript" type="file" accept=".script" style="display: none">
     <div class="row">
         <div class="col-md-12 text-center">
             <h2>Stackmaschinen Simulator
