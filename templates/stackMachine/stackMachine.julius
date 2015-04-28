@@ -30,6 +30,9 @@ function initTooltips() {
     $('[data-toggle="tooltip"]').tooltip({
         container: 'body'
     });
+    $('[data-tooltip="tooltip"]').tooltip({
+        container: 'body'
+    });
 }
 
 function StackMachineModel() {
@@ -246,6 +249,7 @@ function StackMachineModel() {
     });
 
     //file management
+    self.fileName = ko.observable("");
     self.saveScript = function () {
         var csv = "";
         var lines = self.editor.getSession().getDocument().getAllLines();
@@ -258,7 +262,8 @@ function StackMachineModel() {
             }
         });
         var blob = new Blob([csv], {type: "text/csv"});
-        saveAs(blob, "stackMachine.script");
+        saveAs(blob, self.fileName() + ".script");
+        $('#saveFileModal').modal('hide')
     };
     self.loadScript = function () {
         document.getElementById('loadScript').click();
@@ -268,10 +273,9 @@ function StackMachineModel() {
     function handleFileSelect(evt) {
         var files = evt.target.files; // FileList object
 
-        // Loop through the FileList and render image files as thumbnails.
         for (var i = 0, f; f = files[i]; i++) {
 
-            // Only process image files.
+            // Only process script files.
             if (!/.*\.script$/.test("stackMachine.script")) {
                 continue;
             }

@@ -30,7 +30,7 @@
                                     <span class="glyphicon glyphicon-file">
                                 <a type="button" class="btn btn-success" data-bind="click:loadScript" data-toggle="tooltip" data-placement="top" title="Skript laden">
                                     <span class="glyphicon glyphicon-floppy-open">
-                                <a type="button" class="btn btn-primary" data-bind="click: saveScript" data-toggle="tooltip" data-placement="top" title="Skript speichern">
+                                <a type="button" class="btn btn-primary" data-target="#saveFileModal" data-toggle="modal" data-tooltip="tooltip" data-placement="top" title="Skript speichern">
                                     <span class="glyphicon glyphicon-floppy-save">
                 <div class="panel-body remove padding">
                     <div id="editor" class="editor">
@@ -109,3 +109,17 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+
+    <div class="modal fade" id="saveFileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;
+                    <h4 class="modal-title">Script speichern
+                <div class="modal-body text-center">
+                    <div class="form-inline">
+                        <label for="fileNameInput"> Dateiname
+                        <input data-bind="value: fileName, valueUpdate:'input'" type="text" class="form-control" id="fileNameInput">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
+                    <button type="button" class="btn btn-primary" data-bind="click: saveScript, attr: {disabled: fileName() === ''}"> Speichern
