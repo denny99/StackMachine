@@ -38,46 +38,24 @@
                             <span class="glyphicon glyphicon-floppy-save">
             <div class="col-xs-3 stackTable">
                 <h3 class="text-center"> Ausgangs-Stack
-                \<!-- ko if: initialStack().length <= 12 -->
-                    <div class="bottom transformed circle stack">
-                    <div class="rectangleTop stack" data-bind="style: {top: (520 - 30 * initialStack().length) + 'px'}">
-                    \<!-- ko foreach: initialStack -->
-                        <div class="rectangle stack" data-bind="style: {top: (550 - 30 * ($parent.initialStack().length - 1 - $index())) + 'px'}">
-                            <div class="stackContent" data-bind="text: $data">
-                    \<!-- /ko -->
-                    <div class="top transformed circle" data-bind="style: {top: (420 - 30 * initialStack().length) + 'px'}">
-                \<!-- /ko -->
-                \<!-- ko if: initialStack().length > 12 -->
-                    <table class="table table-bordered">
-                        <thead>
-                            <th> Index
-                            <th> Wert
-                        <tbody data-bind="foreach: initialStack">
-                            <tr>
-                                <td data-bind="text: $index">
-                                <td data-bind="text: $data">
-                \<!-- /ko -->
+                <table class="table table-bordered">
+                    <thead>
+                        <th> Index
+                        <th> Wert
+                    <tbody data-bind="foreach: initialStack">
+                        <tr>
+                            <td data-bind="text: $index">
+                            <td data-bind="text: $data">
             <div class="col-xs-3 stackTable">
                 <h3 class="text-center"> Ziel-Stack
-                \<!-- ko if: targetStack().length <= 12 -->
-                    <div class="bottom transformed circle stack">
-                    <div class="rectangleTop stack" data-bind="style: {top: (520 - 30 * targetStack().length) + 'px'}">
-                    \<!-- ko foreach: targetStack -->
-                        <div class="rectangle stack" data-bind="style: {top: (550 - 30 * ($parent.targetStack().length - 1 - $index())) + 'px'}">
-                            <div class="stackContent" data-bind="text: $data">
-                    \<!-- /ko -->
-                    <div class="top transformed circle" data-bind="style: {top: (420 - 30 * targetStack().length) + 'px'}">
-                \<!-- /ko -->
-                \<!-- ko if: targetStack().length > 12 -->
-                    <table class="table table-bordered">
-                        <thead>
-                            <th> Index
-                            <th> Wert
-                        <tbody data-bind="foreach: targetStack">
-                            <tr>
-                                <td data-bind="text: $index">
-                                <td data-bind="text: $data">
-                \<!-- /ko -->
+                <table class="table table-bordered">
+                    <thead>
+                        <th> Index
+                        <th> Wert
+                    <tbody data-bind="foreach: targetStack">
+                        <tr>
+                            <td data-bind="text: $index">
+                            <td data-bind="text: $data">
     \<!-- /ko -->
     \<!-- ko ifnot: editorActive -->
         <div class="row">
