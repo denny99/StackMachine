@@ -47,7 +47,7 @@ function StackMachineModel() {
             contentType: "application/json",
             // don't process the body, we'll render data into a valid string
             processData: false,
-            url: "@{StackMachineTasksR}",
+            url: "@{StackMachineTasksR}?public=true",
             type: "GET",
             success: function (data) {
                 self.tasks(data.tasks);
@@ -73,6 +73,7 @@ function StackMachineModel() {
             type: "GET",
             success: function (data) {
                 self.backupStack = data.task.initialStack;
+                self.targetStack(data.task.targetStack);
                 self.task(data.task);
                 self.resetProgram();
             },
@@ -97,6 +98,7 @@ function StackMachineModel() {
     self.program = ko.observableArray([]);
     self.backupStack = [];
     self.stack = ko.observableArray([]);
+    self.targetStack = ko.observableArray([]);
     self.stackHistory = [self.backupStack];
 
     //API actions

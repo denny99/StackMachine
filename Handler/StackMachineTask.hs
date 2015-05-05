@@ -1,6 +1,8 @@
 module Handler.StackMachineTask where
 
 import Import
+import qualified Data.Text as T
+import Prelude (read)
 import Model.Stack
 import Model.StackMachine
 import Model.StackMachineTask()
@@ -36,7 +38,7 @@ postStackMachineTaskR stackMachineTaskId = do
                        else
                            sendResponseStatus status200 ("Fast Korrekt. Anordnung korrigieren" :: Text)
                else
-                   sendResponseStatus status200 ("Korrekt" :: Text)
+                    sendResponseStatus status200 ("Korrekt" :: Text)
 
 putStackMachineTaskR :: StackMachineTaskId -> Handler Value
 putStackMachineTaskR stackMachineTaskId = do

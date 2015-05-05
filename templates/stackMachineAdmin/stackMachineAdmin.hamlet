@@ -10,6 +10,9 @@
                 <div class="form-group" data-bind="css:{'has-error': taskDesc() ===''}">
                     <label for="taskDesc">Aufgabenbeschreibung
                     <textarea type="text" class="form-control" id="taskDesc" placeholder="Beschreibung eingeben" data-bind="value: taskDesc, valueUpdate: 'input'">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" data-bind="checked: taskActive"> Aktiviert
                 <div class="form-group">
                     <label for="initialStack">Ausgangs-Stack
                     <div class="input-group" id="initialStack">
@@ -42,20 +45,29 @@
                     <thead>
                         <th> Index
                         <th> Wert
-                    <tbody data-bind="foreach: initialStack">
+                    <tbody>
+                        \<!-- ko foreach: initialStack -->
                         <tr>
                             <td data-bind="text: $index">
                             <td data-bind="text: $data">
+                        \<!-- /ko -->
+                        <tr class="active">
+                            <td colspan="2">
             <div class="col-xs-3 stackTable">
                 <h3 class="text-center"> Ziel-Stack
                 <table class="table table-bordered">
                     <thead>
                         <th> Index
                         <th> Wert
-                    <tbody data-bind="foreach: targetStack">
+                    <tbody>
+                        \<!-- ko foreach: targetStack -->
                         <tr>
                             <td data-bind="text: $index">
                             <td data-bind="text: $data">
+                        \<!-- /ko -->
+                        <tr class="active">
+                            <td colspan="2">
+
     \<!-- /ko -->
     \<!-- ko ifnot: editorActive -->
         <div class="row">
@@ -64,6 +76,7 @@
                 <div class="overview">
                     <table class="table table-bordered table-hover">
                         <thead>
+                            <th> Status
                             <th> Aufgabennamen
                             <th> Ausgangs-Stack
                             <th> Ziel-Stack
@@ -72,6 +85,9 @@
                                     <span class="glyphicon glyphicon-plus">
                         <tbody data-bind="foreach: tasks">
                             <tr>
+                                <td>
+                                    <button class="btn btn-block" data-bind="css: {'btn-success': active, 'btn-danger': !active}" disabled>
+                                        <span class="glyphicon" data-bind="css: {'glyphicon-ok': active, 'glyphicon-remove': !active}">
                                 <td data-bind="text: name">
                                 <td data-bind="text: initialStack">
                                 <td data-bind="text: targetStack">

@@ -16,7 +16,7 @@
     <div class="row form-group well well-lg" data-bind="visible: task(), with: task">
         <div class="col-xs-12" data-bind="text: desc">
     <div class="row form-group">
-        <div class="col-xs-6 editor">
+        <div class="editor" data-bind="css: {'col-xs-4': task(), 'col-xs-6': !task()}">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="row">
@@ -46,15 +46,34 @@
                             <span class="glyphicon glyphicon-play">
                         <a type="button" class="btn btn-success btn-block" data-bind="click: validateProgram, visible: task, attr: {disabled: program().length === 0 || running()}" data-toggle="tooltip" data-placement="top" title="Ergebnis überprüfen">
                             <span class="glyphicon glyphicon-send">
-        <div class="col-xs-6 stackTable">
+        <div class="stackTable" data-bind="css: {'col-xs-4': task(), 'col-xs-6': !task()}">
+            <h3 class="text-center"> Aktueller Stack
             <table class="table table-hover">
                 <thead>
                     <th> Index
                     <th> Wert
-                <tbody data-bind="foreach: stack">
+                <tbody>
+                    \<!-- ko foreach: stack -->
                     <tr>
                         <td data-bind="text: $index">
                         <td data-bind="text: $data">
+                    \<!-- /ko -->
+                    <tr class="active">
+                        <td colspan="2">
+        <div class="col-xs-4 stackTable" data-bind="if: task">
+            <h3 class="text-center"> Ziel-Stack
+            <table class="table table-hover">
+                <thead>
+                    <th> Index
+                    <th> Wert
+                <tbody>
+                    \<!-- ko foreach: targetStack -->
+                    <tr>
+                        <td data-bind="text: $index">
+                        <td data-bind="text: $data">
+                    \<!-- /ko -->
+                    <tr class="active">
+                        <td colspan="2">
     <div class="row">
         <div class="col-xs-12">
             <a class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Hauptmenü" href=@{HomeR}>

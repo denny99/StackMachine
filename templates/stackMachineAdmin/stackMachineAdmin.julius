@@ -30,7 +30,7 @@ function StackMachineAdminModel() {
             contentType: "application/json",
             // don't process the body, we'll render data into a valid string
             processData: false,
-            url: "@{StackMachineTasksR}",
+            url: "@{StackMachineTasksR}?public=false",
             type: "GET",
             success: function (data) {
                 removeTooltips();
@@ -48,6 +48,7 @@ function StackMachineAdminModel() {
     self.taskId = ko.observable();
     self.taskName = ko.observable("");
     self.taskDesc = ko.observable("");
+    self.taskActive = ko.observable(false);
 
     self.tasks = ko.observableArray([]);
     self.initialStack = ko.observableArray([]);
@@ -78,6 +79,7 @@ function StackMachineAdminModel() {
         self.targetStack([]);
         self.taskName("");
         self.taskDesc("");
+        self.taskActive(false);
         self.taskId();
     };
     self.saveTask = function() {
@@ -98,7 +100,8 @@ function StackMachineAdminModel() {
                 initialStack: self.initialStack(),
                 targetStack: self.targetStack(),
                 desc: self.taskDesc(),
-                name: self.taskName()
+                name: self.taskName(),
+                active: self.taskActive()
             }),
             success: function () {
                 loadTasks();
@@ -130,12 +133,13 @@ function StackMachineAdminModel() {
         self.taskName(task.name);
         self.taskDesc(task.desc);
         self.taskId(task.id);
+        self.taskActive(task.active);
     };
     self.createTask = function() {
         self.cancelCreation();
         self.editorActive(true);
         initTooltips();
-    }
+    };
 }
 
 $(document).ready(function() {

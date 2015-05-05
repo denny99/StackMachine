@@ -13,6 +13,7 @@ instance ToJSON (Entity StackMachineTask) where
         , "targetStack"    .= arrayToStack (stackMachineTaskTargetStack t)
         , "name"   .= stackMachineTaskName t
         , "desc"   .= stackMachineTaskDesc t
+        , "active"   .= stackMachineTaskActive t
         ]
 
 instance FromJSON StackMachineTask where
@@ -25,5 +26,6 @@ instance FromJSON StackMachineTask where
             (T.pack (show (targetStack :: Stack)))
             <$> o .: "name"
             <*> o .: "desc"
+            <*> o .: "active"
 
     parseJSON _ = mzero
