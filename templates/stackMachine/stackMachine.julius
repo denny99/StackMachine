@@ -294,12 +294,42 @@ function StackMachineModel() {
             reader.readAsText(f);
         }
     }
-
     document.getElementById('loadScript').addEventListener('change', handleFileSelect, false);
+
+    //rating management
+    self.helpful = "5";
+    self.understandable = "5";
+    self.bugs = "";
+    self.improvements = "";
+    self.liked = "";
+    self.saveRating = function() {
+        Messenger().ajax({
+            errorMessage: "Speichern fehlgeschlagen. Bitte noch einmal versuchen"
+        }, {
+            url: "@{StackMachineRatingsR}",
+            type: "POST",
+            processData: false,
+            contentType: "application/json",
+            data: JSON.stringify({
+                helpful: JSON.parse(self.helpful),
+                understandable: JSON.parse(self.understandable),
+                bugs: self.bugs,
+                improvements: self.improvements,
+                liked: self.liked
+            }),
+            success: function () {
+                $("#ratingModal").modal("hide");
+            },
+            error: function() {
+            }
+        });
+    }
 }
 
+var debug = new StackMachineModel();
+
 $(document).ready(function () {
-    ko.applyBindings(new StackMachineModel(), document.getElementById("main"));
+    ko.applyBindings(debug, document.getElementById("main"));
     initTooltips();
 
     $("#main").fadeIn();

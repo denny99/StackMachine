@@ -11,4 +11,11 @@ StackMachineTask
     desc Text
     active Bool
 
+StackMachineRating
+    helpful Int
+    understandable Int
+    improvements Text
+    liked Text
+    bugs Text
+
  -- By default this file is used in Model.hs (which is imported by Foundation.hs)

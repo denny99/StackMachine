@@ -1,0 +1,16 @@
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th> Hilfreich
+            <th> Verstaendlich
+            <th> Verbesserungen
+            <th> Lob
+            <th> Fehler
+    <tbody>
+        $forall (Entity _ rating) <- ratings
+            <tr>
+                <td>#{stackMachineRatingHelpful rating}
+                <td>#{stackMachineRatingUnderstandable rating}
+                <td>#{stackMachineRatingImprovements rating}
+                <td>#{stackMachineRatingLiked rating}
+                <td>#{stackMachineRatingBugs rating}

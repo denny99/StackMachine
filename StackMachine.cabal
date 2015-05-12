@@ -26,6 +26,7 @@ library
                      Handler.StackMachineTasks
                      Handler.StackMachineTask
                      Handler.StackMachineAdmin
+                     Handler.StackMachineRatings
                      Model.Program
                      Model.Stack
                      Model.StackMachine
@@ -33,6 +34,7 @@ library
                      Model.StackMachineResponse
                      Model.StackMachineTask
                      Model.StackMachineTaskRequest
+                     Model.StackMachineRating
                      Model.Formula
 
     if flag(dev) || flag(library-only)

@@ -110,7 +110,10 @@ expandFormula (SUB x y) = SUB (expandFormula x) (expandFormula y)
 expandFormula (ADD x y) = ADD (expandFormula x) (expandFormula y)
 expandFormula (Value x) = Value x
 
-isMUL (MUL x y) = True
+isMUL :: Formula -> Bool
+isMUL (MUL _ _) = True
 isMUL _ = False
-isDIV (DIV x y) = True
+
+isDIV :: Formula -> Bool
+isDIV (DIV _ _) = True
 isDIV _ = False

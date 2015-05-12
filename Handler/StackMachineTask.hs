@@ -1,8 +1,6 @@
 module Handler.StackMachineTask where
 
 import Import
-import qualified Data.Text as T
-import Prelude (read)
 import Model.Stack
 import Model.StackMachine
 import Model.StackMachineTask()

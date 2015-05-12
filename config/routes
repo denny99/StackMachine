@@ -9,3 +9,4 @@
 /stackMachine/tasks StackMachineTasksR GET POST
 /stackMachine/tasks/#StackMachineTaskId StackMachineTaskR GET POST PUT DELETE
 /stackMachine/admin StackMachineAdminR GET
+/stackMachine/ratings StackMachineRatingsR GET POST
