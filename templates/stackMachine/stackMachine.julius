@@ -326,10 +326,8 @@ function StackMachineModel() {
     }
 }
 
-var debug = new StackMachineModel();
-
 $(document).ready(function () {
-    ko.applyBindings(debug, document.getElementById("main"));
+    ko.applyBindings(new StackMachineModel(), document.getElementById("main"));
     initTooltips();
 
     $("#main").fadeIn();
