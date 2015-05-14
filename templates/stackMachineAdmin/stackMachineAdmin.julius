@@ -84,10 +84,10 @@ function StackMachineAdminModel() {
     };
     self.saveTask = function() {
         var type = "POST";
-        var url = "/stackMachine/tasks";
+        var url = "../../stackMachine/tasks";
         if (self.taskId()) {
             type = "PUT";
-            url = "/stackMachine/tasks/" + self.taskId()
+            url = "../../stackMachine/tasks/" + self.taskId()
         }
         Messenger().ajax({
             errorMessage: "Speichern fehlgeschlagen. Bitte noch einmal versuchen"
@@ -115,7 +115,7 @@ function StackMachineAdminModel() {
         Messenger().ajax({
             errorMessage: "Löschen fehlgeschlagen. Bitte noch einmal versuchen"
         }, {
-            url: "/stackMachine/tasks/" + task.id,
+            url: "../../stackMachine/tasks/" + task.id,
             type: "DELETE",
             success: function () {
                 loadTasks();
