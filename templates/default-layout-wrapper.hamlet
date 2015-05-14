@@ -24,19 +24,19 @@ $newline never
 
     <script>
         document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/,'js');
-    <script; type="text/javascript"; src=@{StaticR; js_frameworks_jquery_min_js}>
-    <script; type="text/javascript"; src=@{StaticR; js_frameworks_ace_ace_js}>
-    <script; type="text/javascript"; src=@{StaticR; js_frameworks_ace_theme_tomorrow_js}>
-    <script; type="text/javascript"; src=@{StaticR; js_frameworks_knockout_3_3_0_js}>
-    <script; type="text/javascript"; src=@{StaticR; js_frameworks_bootstrap_min_js}>
-    <script; type="text/javascript"; src=@{StaticR; js_frameworks_messenger_min_js}>
-    <script; type="text/javascript"; src=@{StaticR; js_frameworks_FileSaver_min_js}>
-    <script; type="text/javascript"; src=@{StaticR; js_stackMachine_aceMode_stackMachineMode_js}>
+    <script type="text/javascript" src=@{StaticR js_frameworks_jquery_min_js}>
+    <script type="text/javascript" src=@{StaticR js_frameworks_ace_ace_js}>
+    <script type="text/javascript" src=@{StaticR js_frameworks_ace_theme_tomorrow_js}>
+    <script type="text/javascript" src=@{StaticR js_frameworks_knockout_3_3_0_js}>
+    <script type="text/javascript" src=@{StaticR js_frameworks_bootstrap_min_js}>
+    <script type="text/javascript" src=@{StaticR js_frameworks_messenger_min_js}>
+    <script type="text/javascript" src=@{StaticR js_frameworks_FileSaver_min_js}>
+    <script type="text/javascript" src=@{StaticR js_stackMachine_aceMode_stackMachineMode_js}>
   <body>
-      ^{pageBody pc};
+      ^{pageBody pc}
 
-    $maybe; analytics <- appAnalytics; $; appSettings; master
-      <script>;
+    $maybe analytics <- appAnalytics $ appSettings master
+      <script>
         if(!window.location.href.match(/localhost/)){
           window._gaq = [['_setAccount','#{analytics}'],['_trackPageview'],['_trackPageLoadTime']];
           (function() {
