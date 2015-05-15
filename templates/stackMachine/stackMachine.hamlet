@@ -30,7 +30,7 @@
             <p> Ist eine Aufgabe geladen so erscheint eine 2. Tabelle "Ziel-Stack". Diese zeigt an wie der Stack am Ende des Programmes ausehen soll.
             <p> Bitte bewerte doch am Ende das System und gebe ein Feedback ab. Drücke dazu
                 <button type="button" class="btn btn-default btn-xs text-button" disabled> Bewerten
-            <p> In der Nachfolgenden Tabelle sind alle Knöpfe des SkriptEditors kurz erklärt.
+            <p> In der nachfolgenden Tabelle sind alle Knöpfe des SkriptEditors kurz erklärt.
             <table class="table">
                 <thead>
                     <tr>
