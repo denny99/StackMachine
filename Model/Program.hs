@@ -35,8 +35,11 @@ instance FromJSON Command where
                                             else if command == ("slide" :: String)
                                                 then SLIDE <$> o .: "value"
                                                 else if command == ("print" :: String)
-                                                  then return PRINT
-                                                  else return $ MARK $ P.init command
+                                                    then return PRINT
+                                                    else if P.last command == '.'
+                                                        then return $ MARK $ P.init command
+                                                        else
+                                                            error $ "Unbekannter Befehl: " ++ command
 
     parseJSON _ = mzero
 
@@ -49,7 +52,7 @@ getCommand (PUSH _) = "push"
 getCommand (POP) = "pop"
 getCommand (BRANCHZ _) = "branchz"
 getCommand (JUMP _) = "jump"
-getCommand (MARK x) = x
+getCommand (MARK x) = x ++ "."
 getCommand (PUSHK _) = "pushK"
 getCommand (ADD) = "+"
 getCommand (SUBTRACT) = "-"
