@@ -120,7 +120,7 @@
                             <span class="glyphicon glyphicon-play">
                         <a type="button" class="btn btn-success btn-block" data-bind="click: validateProgram, visible: task, attr: {disabled: program().length === 0 || running()}" data-toggle="tooltip" data-placement="top" title="Ergebnis überprüfen">
                             <span class="glyphicon glyphicon-send">
-        <div class="stackTable" data-bind="css: {'col-xs-4': task(), 'col-xs-6': !task()}">
+        <div class="stackTable table-responsive" data-bind="css: {'col-xs-4': task(), 'col-xs-6': !task()}">
             <h3 class="text-center"> Aktueller Stack
             <table class="table table-hover">
                 <thead>
@@ -135,7 +135,7 @@
                     <tr class="active">
                         <td colspan="2">
         \<!-- ko if: task -->
-        <div class="col-xs-4 stackTable">
+        <div class="col-xs-4 stackTable table-responsive">
             <h3 class="text-center"> Ziel-Stack
             <table class="table table-hover">
                 <thead>
