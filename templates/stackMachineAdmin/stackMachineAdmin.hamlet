@@ -36,7 +36,7 @@
                                 <span class="glyphicon glyphicon-plus">
                 <div class="form-group">
                     <div class="btn-group btn-group-justified" role="group" aria-label="...">
-                        <a type="button" class="btn btn-danger" data-bind="click: cancelCreation" data-toggle="tooltip" data-placement="top" title="Abbrechen">
+                        <a type="button" class="btn btn-warning" data-bind="click: cancelCreation" data-toggle="tooltip" data-placement="top" title="Abbrechen">
                             <span class="glyphicon glyphicon-remove">
                         <a type="button" class="btn btn-success" data-bind="click: saveTask, attr: {disabled: taskName() === ''}" data-toggle="tooltip" data-placement="top" title="Aufgabe speichern">
                             <span class="glyphicon glyphicon-floppy-save">
@@ -95,7 +95,7 @@
                                 <td style="max-width: 100px; width: 100px">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-danger" data-bind="click: $parent.deleteTask"  data-toggle="tooltip" data-placement="top" title="Löschen">
-                                            <span class="glyphicon glyphicon-remove">
+                                            <span class="glyphicon glyphicon-trash">
                                         <button type="button" class="btn btn-warning" data-bind="click: $parent.modifyTask" data-toggle="tooltip" data-placement="top" title="Bearbeiten">
                                             <span class="glyphicon glyphicon-pencil">
     \<!-- /ko -->
