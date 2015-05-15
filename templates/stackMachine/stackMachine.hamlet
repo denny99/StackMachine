@@ -29,7 +29,7 @@
             <p> Der oberste Eintrag ist auch der oberste Eintrag im Stack.
             <p> Ist eine Aufgabe geladen so erscheint eine 2. Tabelle "Ziel-Stack". Diese zeigt an wie der Stack am Ende des Programmes ausehen soll.
             <p> Bitte bewerte doch am Ende das System und gebe ein Feedback ab. Drücke dazu auf den Knopf
-                <button type="button" class="btn btn-default btn-xs text-button"> Bewerten
+                <button type="button" class="btn btn-default btn-xs text-button" disabled> Bewerten
                 neben der Überschrift
             <p> In der nachfolgenden Tabelle sind alle Knöpfe des SkriptEditors kurz erklärt.
             <table class="table">
