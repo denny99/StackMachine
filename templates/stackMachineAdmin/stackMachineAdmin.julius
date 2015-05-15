@@ -80,7 +80,7 @@ function StackMachineAdminModel() {
         self.taskName("");
         self.taskDesc("");
         self.taskActive(false);
-        self.taskId();
+        self.taskId(undefined);
     };
     self.saveTask = function() {
         var type = "POST";
