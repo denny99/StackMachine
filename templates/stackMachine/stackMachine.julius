@@ -228,7 +228,7 @@ function StackMachineModel() {
             contentType: "application/json",
             // don't process the body, we'll render data into a valid string
             processData: false,
-            url: "../stackMachine/tasks/" + self.selectedTask(),
+            url: "@{StackMachineTasksR}/" + self.selectedTask(),
             type: "POST",
             // notice the usage of stringify here
             data: JSON.stringify({

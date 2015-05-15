@@ -84,10 +84,10 @@ function StackMachineAdminModel() {
     };
     self.saveTask = function() {
         var type = "POST";
-        var url = "../../stackMachine/tasks";
+        var url = "@{StackMachineTasksR}";
         if (self.taskId()) {
             type = "PUT";
-            url = "../../stackMachine/tasks/" + self.taskId()
+            url += "/" + self.taskId()
         }
         Messenger().ajax({
             errorMessage: "Speichern fehlgeschlagen. Bitte noch einmal versuchen"
