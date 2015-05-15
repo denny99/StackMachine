@@ -134,7 +134,8 @@
                     \<!-- /ko -->
                     <tr class="active">
                         <td colspan="2">
-        <div class="col-xs-4 stackTable" data-bind="if: task">
+        \<!-- ko if: task -->
+        <div class="col-xs-4 stackTable">
             <h3 class="text-center"> Ziel-Stack
             <table class="table table-hover">
                 <thead>
@@ -148,6 +149,7 @@
                     \<!-- /ko -->
                     <tr class="active">
                         <td colspan="2">
+        \<!-- \ko -->
     <div class="row">
         <div class="col-xs-12">
             <a class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Hauptmenü" href=@{HomeR}>
