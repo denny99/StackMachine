@@ -30,15 +30,9 @@ instance Show Formula where
         (_, SUB _ _) -> show x ++ "*(" ++ show y ++ ")"
         (_, _) -> show x ++ "*" ++ show y
     show (DIV x y) = case (x, y) of
-         (ADD _ _, ADD _ _) -> "(" ++ show x ++ ")/(" ++ show y ++ ")"
-         (SUB _ _, SUB _ _) -> "(" ++ show x ++ ")/(" ++ show y ++ ")"
-         (ADD _ _, SUB _ _) -> "(" ++ show x ++ ")/(" ++ show y ++ ")"
-         (SUB _ _, ADD _ _) -> "(" ++ show x ++ ")/(" ++ show y ++ ")"
-         (ADD _ _, _) -> "(" ++ show x ++ ")/" ++ show y
-         (SUB _ _, _) -> "(" ++ show x ++ ")/" ++ show y
-         (_, ADD _ _) -> show x ++ "/(" ++ show y ++ ")"
-         (_, SUB _ _) -> show x ++ "/(" ++ show y ++ ")"
-         (_, _) -> show x ++ "/" ++ show y
+         (ADD _ _, _) -> "(" ++ show x ++ ")/(" ++ show y ++ ")"
+         (SUB _ _, _) -> "(" ++ show x ++ ")/(" ++ show y ++ ")"
+         (_, _) -> show x ++ "/(" ++ show y ++ ")"
 
 instance Eq Formula where
   Value a        == Value b =  a == b
