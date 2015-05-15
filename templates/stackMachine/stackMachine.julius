@@ -69,7 +69,7 @@ function StackMachineModel() {
             contentType: "application/json",
             // don't process the body, we'll render data into a valid string
             processData: false,
-            url: "/stackMachine/tasks/" + self.selectedTask(),
+            url: "@{StackMachineTasksR}/" + self.selectedTask(),
             type: "GET",
             success: function (data) {
                 self.backupStack = data.task.initialStack;

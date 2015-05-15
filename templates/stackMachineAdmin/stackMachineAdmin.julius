@@ -115,7 +115,7 @@ function StackMachineAdminModel() {
         Messenger().ajax({
             errorMessage: "Löschen fehlgeschlagen. Bitte noch einmal versuchen"
         }, {
-            url: "../../stackMachine/tasks/" + task.id,
+            url: "@{StackMachineTasksR}/" + task.id,
             type: "DELETE",
             success: function () {
                 loadTasks();
