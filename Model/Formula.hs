@@ -64,7 +64,7 @@ parseFormula (x:xs) sx parCounter
             else
                     parseFormula xs (sx ++ [x]) parCounter
     | x == '+'  && parCounter == 0 = ADD (parseFormula (removePars sx) [] 0) (parseFormula (removePars xs) [] 0)
-    | x == '-'  && parCounter == 0 =
+    | x == '-' && parCounter == 0 && not (null sx) =
         let term = findTerm xs [] 0 in
             if length term == length xs || isDIV (parseFormula xs [] 0) || isMUL (parseFormula xs [] 0) then
                     SUB (parseFormula (removePars sx) [] 0) (parseFormula (removePars xs) [] 0)
@@ -88,7 +88,7 @@ findTerm (x:xs) sx parCounter
     | x == '*'  && parCounter == 0 = sx
     | x == '/'  && parCounter == 0 = sx
     | x == '+'  && parCounter == 0 = sx
-    | x == '-'  && parCounter == 0 = sx
+    | x == '-'  && parCounter == 0 && not (null sx) = sx
     | x == '(' = findTerm xs (sx ++ [x]) (parCounter + 1)
     | x == ')' && parCounter == 1 && null xs = sx ++ [x]
     | x == ')' && parCounter /= 0 = findTerm xs (sx ++ [x]) (parCounter - 1)

@@ -1,7 +1,7 @@
 module Model.StackMachine where
 
 import Import
-import Data.Char(isDigit)
+import Data.Char(isDigit, isAlpha)
 import qualified Data.List as L
 import qualified Data.Maybe as M
 import qualified Prelude as P
@@ -30,8 +30,8 @@ execute POP [] _ _ _ = error "Stack enthält keine Elemente"
 execute POP (_:stack) _ programCounter jumpCounter = Response.StackMachineResponse stack (programCounter + 1) jumpCounter
 
 execute (PUSHK x) stack _ programCounter jumpCounter
-    | isNumber x || length x == 1 = Response.StackMachineResponse (F.Value x : stack) (programCounter + 1) jumpCounter
-    | otherwise = error "pushK nur für Zahlen oder Character"
+    | isNumber x || isWord x = Response.StackMachineResponse (F.Value x : stack) (programCounter + 1) jumpCounter
+    | otherwise = error "pushK nur für Zahlen oder Wörter"
 
 execute ADD (x:y:xs) _ programCounter jumpCounter =
     if isNumber (show x) && isNumber (show y) then
@@ -60,10 +60,13 @@ execute DIVIDE _ _ _ _ = error "Nicht genug Elemente im Stack"
 
 execute PRINT stack _ programCounter jumpCounter = Response.StackMachineResponse (P.tail stack) (programCounter + 1) jumpCounter
 execute (SLIDE (m:n:_)) stack _ programCounter jumpCounter =
-    if (m + n) < (length stack + 1) then
-        Response.StackMachineResponse (concat [take m stack, drop (m + n) stack]) (programCounter + 1) jumpCounter
+    if m > 0 && n > 0 then
+        if (m + n) < (length stack + 1) then
+            Response.StackMachineResponse (concat [take m stack, drop (m + n) stack]) (programCounter + 1) jumpCounter
+        else
+            error "Nicht genug Elemente im Stack"
     else
-        error "Nicht genug Elemente im Stack"
+        error "Slide benötigt zwei Zahlen > 0"
 execute (SLIDE _) _ _ _ _ = error "Nicht genug Elemente im Stack"
 execute (MARK _) stack _ programCounter jumpCounter = Response.StackMachineResponse stack (programCounter + 1) jumpCounter
 execute (JUMP x) stack program _ jumpCounter = Response.StackMachineResponse stack (findMark program (MARK x)) (jumpCounter + 1)
@@ -77,6 +80,9 @@ execute (BRANCHZ x) (y:xs) program programCounter jumpCounter =
 isNumber :: String -> Bool
 isNumber ('-':xs) = all isDigit xs
 isNumber x = all isDigit x
+
+isWord :: String -> Bool
+isWord = all isAlpha
 
 findMark:: Program -> Command -> Int
 findMark program mark =

@@ -30,12 +30,12 @@ define('ace/mode/stackMachine_highlight_rules', ["require", "exports", "module",
                 {defaultToken: "invalid"}
             ],
             "number": [
-                {token: "constant.numeric.bold", regex: /[0-9]+$/, next: "start"},
+                {token: "constant.numeric.bold", regex: /[\-]?[0-9]+$/, next: "start"},
                 {defaultToken: "invalid"}
             ],
             "char": [
-                {token: "constant.numeric.bold", regex: /[0-9]*$/, next: "start"},
-                {token: "string.qouted.double.bold", regex: /.{1}$/, next: "start"},
+                {token: "constant.numeric.bold", regex: /[\-]?[0-9]*$/, next: "start"},
+                {token: "string.qouted.double.bold", regex: /[a-zA-Z0-9]*$/, next: "start"},
                 {defaultToken: "invalid"}
             ]
         };

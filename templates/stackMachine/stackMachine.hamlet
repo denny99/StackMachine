@@ -18,7 +18,7 @@
                             <button class="btn btn-success" type="button" data-bind="click: loadTask" data-toggle="tooltip" data-placement="top" title="Aufgabe starten">
                                 <span class="glyphicon glyphicon-floppy-open">
     <div class="row form-group well well-lg" data-bind="visible: task(), with: task">
-        <div class="col-xs-12" data-bind="text: desc">
+        <div class="col-xs-12" data-bind="html: desc">
     <div class="row form-group">
         <div class="editor" data-bind="css: {'col-xs-4': task(), 'col-xs-6': !task()}">
             <div class="panel panel-default">
@@ -144,13 +144,17 @@
                                 <th> Beschreibung
                         <tbody>
                             <tr>
+                                <td> pop
+                                <td>
+                                    das oberste Element des Stacks wird entfernt.
+                            <tr>
                                 <td> push i
                                 <td>
                                     i ist eine Zahl als Stackadresse; 0 = oberstes, 1 = zweites, ... Dieses Element des Stacks
                                     wird oben auf den Stack kopiert.
                             <tr>
                                 <td> pushK n
-                                <td> n ist eine Zahlenkonstante oder Wort, die auf den Stack obendrauf gelegt wird.
+                                <td> n ist eine Zahlenkonstante oder Wörter, die auf den Stack obendrauf gelegt wird.
                             <tr>
                                 <td> +, −, ∗, /
                                 <td>
