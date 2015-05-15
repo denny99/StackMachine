@@ -13,8 +13,8 @@ $newline never
     <meta name="author" content="">
 
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <link rel="stylesheet" href="/static/css/messenger.css">
-    <link rel="stylesheet" href="/static/css/messenger-spinner.css">
+    <link rel=stylesheet href=@{StaticR css_messenger_css}>
+    <link rel=stylesheet href=@{StaticR css_messenger_spinner_css}>
 
     ^{pageHead pc}
 

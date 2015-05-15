@@ -49,6 +49,7 @@ instance Eq Formula where
   _              == _               =  False
 
 parseFormula :: String -> String -> Int -> Formula
+parseFormula [] _ _ = Value "0"
 parseFormula (x:xs) sx parCounter
     | x == '*'  && parCounter == 0 =
         let term = findTerm xs [] 0 in
