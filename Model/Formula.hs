@@ -91,6 +91,7 @@ findTerm (x:xs) sx parCounter
     | x == ')' && parCounter /= 0 = findTerm xs (sx ++ [x]) (parCounter - 1)
     | null xs = sx ++ [x]
     | otherwise = findTerm xs (sx ++ [x]) parCounter
+findTerm [] _ _ = error "Formel ist fehlerhaft"
 
 expandFormula :: Formula -> Formula
 expandFormula (MUL (ADD x y) z) = expandFormula $ ADD (expandFormula (MUL z x)) (expandFormula (MUL z y))
