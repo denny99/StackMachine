@@ -72,9 +72,9 @@ function StackMachineModel() {
             url: "@{StackMachineTasksR}/" + self.selectedTask(),
             type: "GET",
             success: function (data) {
-                data.task.desc = data.task.desc.replace(/\n/g, "<br>");
                 self.backupStack = data.task.initialStack;
                 self.targetStack(data.task.targetStack);
+                data.task.desc = data.task.desc.replace(/\n/g, "");
                 self.task(data.task);
                 self.resetProgram();
             },

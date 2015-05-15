@@ -45,15 +45,17 @@ function StackMachineAdminModel() {
 
     self.editorActive = ko.observable(false);
 
+    //loaded task values
     self.taskId = ko.observable();
     self.taskName = ko.observable("");
-    self.taskDesc = ko.observable("");
+    self.taskDesc = "";
     self.taskActive = ko.observable(false);
 
     self.tasks = ko.observableArray([]);
     self.initialStack = ko.observableArray([]);
     self.targetStack = ko.observableArray([]);
 
+    //adding elemnts to stacks
     self.initialInput = ko.observable("");
     self.targetInput = ko.observable("");
     self.pushInitialStack = function() {
@@ -71,6 +73,24 @@ function StackMachineAdminModel() {
         self.targetStack.shift();
     };
 
+    //editor settings
+    function initEditor () {
+        self.editor = ace.edit("editor");
+        self.editor.setTheme("ace/theme/tomorrow");
+        self.editor.getSession().setMode("ace/mode/html");
+        self.editor.on("change", function (e) {
+            var lines = self.editor.getSession().getDocument().getAllLines();
+            self.taskDesc = "";
+            lines.forEach(function (line, i) {
+                self.taskDesc += line;
+                if (i < lines.length - 1) {
+                    self.taskDesc += "\n"
+                }
+            });
+        });
+    }
+
+    //task operations
     self.cancelCreation = function() {
         removeTooltips();
         self.editorActive(false);
@@ -78,7 +98,7 @@ function StackMachineAdminModel() {
         self.initialStack([]);
         self.targetStack([]);
         self.taskName("");
-        self.taskDesc("");
+        self.taskDesc = "";
         self.taskActive(false);
         self.taskId(undefined);
     };
@@ -99,7 +119,7 @@ function StackMachineAdminModel() {
             data: JSON.stringify({
                 initialStack: self.initialStack(),
                 targetStack: self.targetStack(),
-                desc: self.taskDesc(),
+                desc: self.taskDesc,
                 name: self.taskName(),
                 active: self.taskActive()
             }),
@@ -128,16 +148,24 @@ function StackMachineAdminModel() {
         removeTooltips();
         self.editorActive(true);
         initTooltips();
+        initEditor();
         self.initialStack(task.initialStack);
         self.targetStack(task.targetStack);
         self.taskName(task.name);
-        self.taskDesc(task.desc);
+        self.taskDesc = task.desc;
+
+        var lines = task.desc.split("\n");
+        console.log(lines.length);
+        self.editor.getSession().getDocument().insertLines(0, lines);
+        self.editor.getSession().getDocument().removeLines(lines.length, lines.length);
+
         self.taskId(task.id);
         self.taskActive(task.active);
     };
     self.createTask = function() {
         self.cancelCreation();
         self.editorActive(true);
+        initEditor();
         initTooltips();
     };
 }

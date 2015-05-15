@@ -7,9 +7,10 @@
                 <div class="form-group" data-bind="css:{'has-error': taskName() ===''}">
                     <label for="taskName">Name der Aufgabe
                     <input type="text" class="form-control" id="taskName" placeholder="Namen eingeben" data-bind="value: taskName, valueUpdate: 'input'">
-                <div class="form-group" data-bind="css:{'has-error': taskDesc() ===''}">
-                    <label for="taskDesc">Aufgabenbeschreibung
-                    <textarea type="text" class="form-control" id="taskDesc" placeholder="Beschreibung eingeben" data-bind="value: taskDesc, valueUpdate: 'input'">
+                <div class="form-group">
+                    <label for="editor">Aufgabenbeschreibung
+                    <div id="editor" class="editor">
+                    <!--<textarea type="text" class="form-control" id="taskDesc" placeholder="Beschreibung eingeben" data-bind="value: taskDesc, valueUpdate: 'input'">-->
                 <div class="checkbox">
                     <label>
                         <input type="checkbox" data-bind="checked: taskActive"> Aktiviert
@@ -37,7 +38,7 @@
                     <div class="btn-group btn-group-justified" role="group" aria-label="...">
                         <a type="button" class="btn btn-danger" data-bind="click: cancelCreation" data-toggle="tooltip" data-placement="top" title="Abbrechen">
                             <span class="glyphicon glyphicon-remove">
-                        <a type="button" class="btn btn-success" data-bind="click: saveTask, attr: {disabled: taskName() === '' || taskDesc() === ''}" data-toggle="tooltip" data-placement="top" title="Aufgabe speichern">
+                        <a type="button" class="btn btn-success" data-bind="click: saveTask, attr: {disabled: taskName() === ''}" data-toggle="tooltip" data-placement="top" title="Aufgabe speichern">
                             <span class="glyphicon glyphicon-floppy-save">
             <div class="col-xs-3 stackTable">
                 <h3 class="text-center"> Ausgangs-Stack
