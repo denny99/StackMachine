@@ -30,8 +30,11 @@ instance Show Formula where
         (_, SUB _ _) -> show x ++ "*(" ++ show y ++ ")"
         (_, _) -> show x ++ "*" ++ show y
     show (DIV x y) = case (x, y) of
+         (ADD _ _, Value _) -> "(" ++ show x ++ ")/" ++ show y
          (ADD _ _, _) -> "(" ++ show x ++ ")/(" ++ show y ++ ")"
+         (SUB _ _, Value _) -> "(" ++ show x ++ ")/" ++ show y
          (SUB _ _, _) -> "(" ++ show x ++ ")/(" ++ show y ++ ")"
+         (_, Value _) -> show x ++ "/" ++ show y
          (_, _) -> show x ++ "/(" ++ show y ++ ")"
 
 instance Eq Formula where
@@ -98,9 +101,10 @@ expandFormula (MUL x y) = MUL (expandFormula x) (expandFormula y)
 
 expandFormula (DIV (ADD x y) z) = expandFormula $ ADD (expandFormula (DIV x z)) (expandFormula (DIV y z))
 expandFormula (DIV (SUB x y) z) = expandFormula $ SUB (expandFormula (DIV x z)) (expandFormula (DIV y z))
+expandFormula (DIV x (DIV y z)) = expandFormula $ MUL (expandFormula x) (expandFormula (DIV z y))
 expandFormula (DIV x y) = DIV (expandFormula x) (expandFormula y)
 
-expandFormula (SUB x (ADD y z)) = expandFormula $ SUB x (SUB y z)
+expandFormula (SUB x (ADD y z)) = expandFormula $ SUB (expandFormula x) (expandFormula (SUB y z))
 expandFormula (SUB x y) = SUB (expandFormula x) (expandFormula y)
 expandFormula (ADD x y) = ADD (expandFormula x) (expandFormula y)
 expandFormula (Value x) = Value x
