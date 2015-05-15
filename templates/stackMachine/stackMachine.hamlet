@@ -19,6 +19,75 @@
                                 <span class="glyphicon glyphicon-floppy-open">
     <div class="row form-group well well-lg" data-bind="visible: task(), with: task">
         <div class="col-xs-12" data-bind="html: desc">
+    <div class="row form-group well well-lg" data-bind="visible: !task()">
+        <div class="col-xs-12">
+            <h4> Allgemeine Hinweise zur Benutzung:
+            <p> Um eine Übungsaufgabe zu laden wähle eine Aufgabe aus dem Dropdown über dieser Anleitung aus und drücke
+                <button class="btn btn-success btn-xs text-button" type="button" disabled>
+                    <span class="glyphicon glyphicon-floppy-open">
+            <p> Die Tabelle unter "Aktueller Stack" repräsentiert den aktuellen Stack auf dem das Programm läuft.
+            <p> Der oberste Eintrag ist auch der oberste Eintrag im Stack.
+            <p> Ist eine Aufgabe geladen so erscheint eine 2. Tabelle "Ziel-Stack". Diese zeigt an wie der Stack am Ende des Programmes ausehen soll.
+            <p> Bitte bewerte doch am Ende das System und gebe ein Feedback ab. Drücke dazu
+                <button type="button" class="btn btn-default btn-xs text-button" disabled> Bewerten
+            <p> In der Nachfolgenden Tabelle sind alle Knöpfe des SkriptEditors kurz erklärt.
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>
+                            <button type="button" class="btn btn-default btn-xs text-button" disabled>
+                                <span class="glyphicon glyphicon-question-sign">
+                        <td>
+                            Zeigt ein Fenster an in dem alle Befehle der Stackmaschine erklärt sind
+                    <tr>
+                        <td>
+                            <a type="button" class="btn btn-warning btn-xs text-button" disabled>
+                                    <span class="glyphicon glyphicon-file">
+                        <td>
+                            Erstelle ein neues Skript (Leert den Editor)
+                    <tr>
+                        <td>
+                            <a type="button" class="btn btn-success btn-xs text-button" disabled>
+                                <span class="glyphicon glyphicon-floppy-open">
+                        <td>
+                            Lade ein zuvor gespeichertes Skript
+                    <tr>
+                        <td>
+                            <a type="button" class="btn btn-primary btn-xs text-button" disabled>
+                                <span class="glyphicon glyphicon-floppy-save">
+                        <td>
+                            Speichere das aktuelle Skript
+                    <tr>
+                        <td>
+                            <a type="button" class="btn btn-success btn-xs text-button" disabled>
+                                <span class="glyphicon glyphicon-repeat">
+                        <td>
+                            Setze das Programm zurück
+                    <tr>
+                        <td>
+                            <a type="button" class="btn btn-primary btn-xs text-button" disabled>
+                                <span class="glyphicon glyphicon-chevron-left">
+                        <td>
+                            Mache den letzten Schritt rückgängig
+                    <tr>
+                        <td>
+                            <a type="button" class="btn btn-primary btn-xs text-button" disabled>
+                                <span class="glyphicon glyphicon-chevron-right">
+                        <td>
+                            Führe die nächste Zeile aus
+                    <tr>
+                        <td>
+                            <a type="button" class="btn btn-primary btn-xs text-button" disabled>
+                                <span class="glyphicon glyphicon-play">
+                        <td>
+                            Führe den kompletten Code aus
+                    <tr>
+                        <td>
+                            <a type="button" class="btn btn-success btn-xs text-button" disabled>
+                                <span class="glyphicon glyphicon-send">
+                        <td>
+                            Überprüfe das Skript auf Korrektheit. Erst sichtbar nach Laden einer Aufgabe
+
     <div class="row form-group">
         <div class="editor" data-bind="css: {'col-xs-4': task(), 'col-xs-6': !task()}">
             <div class="panel panel-default">
@@ -135,7 +204,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;
-                    <h4 class="modal-title">Anleitung
+                    <h4 class="modal-title">Befehlssatz
                 <div class="modal-body">
                     <table class="table table-bordered">
                         <thead>

@@ -2,6 +2,10 @@
     height: 530px;
 }
 
+.text-button {
+    margin-left: 5px;
+}
+
 .remove.padding {
     padding: 0 0 0 0;
 }
