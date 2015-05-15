@@ -149,7 +149,7 @@
                     \<!-- /ko -->
                     <tr class="active">
                         <td colspan="2">
-        \<!-- \ko -->
+        \<!-- /ko -->
     <div class="row">
         <div class="col-xs-12">
             <a class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Hauptmenü" href=@{HomeR}>
