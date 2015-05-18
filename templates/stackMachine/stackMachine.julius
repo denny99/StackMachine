@@ -38,6 +38,10 @@ function initTooltips() {
 function StackMachineModel() {
     var self = this;
 
+    //visibility of wells
+    self.taskDescVisible = ko.observable(false);
+    self.btnDescVisible = ko.observable(true);
+
     //task management
     function loadTasks() {
         Messenger().ajax({
@@ -50,6 +54,7 @@ function StackMachineModel() {
             url: "@{StackMachineTasksR}?public=true",
             type: "GET",
             success: function (data) {
+                data.tasks.sort(sort_by("name", true));
                 self.tasks(data.tasks);
             },
             // this only refers to the data type of the *returned* data
@@ -76,6 +81,10 @@ function StackMachineModel() {
                 self.targetStack(data.task.targetStack);
                 data.task.desc = data.task.desc.replace(/\n/g, "");
                 self.task(data.task);
+
+                self.taskDescVisible(true);
+                self.btnDescVisible(false);
+
                 self.resetProgram();
             },
             // this only refers to the data type of the *returned* data

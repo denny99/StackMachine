@@ -1,7 +1,10 @@
 <div id="main" class="container" style="display: none">
     <input id="loadScript" type="file" accept=".script" style="display: none">
     <div class="row">
-        <div class="col-md-6 col-md-offset-3 text-center">
+        <div class="col-md-3">
+            <div class="btn-group">
+
+        <div class="col-md-6 text-center">
             <h2>Stackmaschinen Simulator
         <div class="col-md-3">
             <h2>
@@ -17,9 +20,11 @@
                         <span class="input-group-btn">
                             <button class="btn btn-success" type="button" data-bind="click: loadTask" data-toggle="tooltip" data-placement="top" title="Aufgabe starten">
                                 <span class="glyphicon glyphicon-floppy-open">
-    <div class="row form-group well well-lg" data-bind="visible: task(), with: task">
+                            <button class="btn btn-default" type="button" data-bind="click: function() {btnDescVisible(!btnDescVisible())}"> Hinweise umschalten
+                            <button class="btn btn-default" type="button" data-bind="click: function() {taskDescVisible(!taskDescVisible())}, visible: task()"> Aufgabenbeschreibung umschalten
+    <div class="row form-group well well-lg" data-bind="visible: task() && taskDescVisible(), with: task">
         <div class="col-xs-12" data-bind="html: desc">
-    <div class="row form-group well well-lg" data-bind="visible: !task()">
+    <div class="row form-group well well-lg" data-bind="visible: btnDescVisible()">
         <div class="col-xs-12">
             <h4> Allgemeine Hinweise zur Benutzung:
             <p> Um eine Übungsaufgabe zu laden wähle eine Aufgabe aus dem Dropdown über dieser Anleitung aus und drücke

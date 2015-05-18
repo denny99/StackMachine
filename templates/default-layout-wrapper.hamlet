@@ -32,6 +32,7 @@ $newline never
     <script type="text/javascript" src=@{StaticR js_frameworks_messenger_min_js}>
     <script type="text/javascript" src=@{StaticR js_frameworks_FileSaver_min_js}>
     <script type="text/javascript" src=@{StaticR js_stackMachine_aceMode_stackMachineMode_js}>
+    <script type="text/javascript" src=@{StaticR js_stackMachine_helper_js}>
   <body>
       ^{pageBody pc}
 
