@@ -11,9 +11,14 @@
 }
 
 .stackTable {
-    height: 640px;
     max-height: 640px;
     overflow-y: auto;
+}
+
+@media (max-width: 991px) {
+    .ace-margin {
+        margin-top: 120px
+    }
 }
 
 .fill {
