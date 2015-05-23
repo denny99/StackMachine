@@ -60,13 +60,13 @@ execute DIVIDE _ _ _ _ = error "Nicht genug Elemente im Stack"
 
 execute PRINT stack _ programCounter jumpCounter = Response.StackMachineResponse (P.tail stack) (programCounter + 1) jumpCounter
 execute (SLIDE (m:n:_)) stack _ programCounter jumpCounter =
-    if m > 0 && n > 0 then
+    if m >= 0 && n > 0 then
         if (m + n) < (length stack + 1) then
             Response.StackMachineResponse (concat [take m stack, drop (m + n) stack]) (programCounter + 1) jumpCounter
         else
             error "Nicht genug Elemente im Stack"
     else
-        error "Slide benötigt zwei Zahlen > 0"
+        error "Slide benötigt zwei Zahlen m >= 0 und n > 0"
 execute (SLIDE _) _ _ _ _ = error "Nicht genug Elemente im Stack"
 execute (MARK _) stack _ programCounter jumpCounter = Response.StackMachineResponse stack (programCounter + 1) jumpCounter
 execute (JUMP x) stack program _ jumpCounter = Response.StackMachineResponse stack (findMark program (MARK x)) (jumpCounter + 1)
