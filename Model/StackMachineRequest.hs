@@ -7,7 +7,7 @@ import Model.Stack
 data StackMachineRequest = StackMachineRequest {
     stack:: Stack,
     program:: Program,
-    programCounter::Int,
+    programCounter::Integer,
     all::Bool
 } deriving (Show)
 

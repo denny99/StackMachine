@@ -4,9 +4,9 @@ module Model.Program where
 import Import
 import qualified Prelude as P
 
-data Command = PUSH Int | POP | BRANCHZ String |
+data Command = PUSH Integer | POP | BRANCHZ String |
   JUMP String | MARK String | PUSHK String | ADD |
-  SUBTRACT | MULTIPLY | DIVIDE | PRINT | SLIDE [Int]
+  SUBTRACT | MULTIPLY | DIVIDE | PRINT | SLIDE [Integer]
   deriving (Show, Eq)
 
 type Program = [Command]

@@ -5,8 +5,8 @@ import Model.Stack
 
 data StackMachineResponse = StackMachineResponse {
     stack:: Stack,
-    programCounter::Int,
-    jumpCounter::Int
+    programCounter::Integer,
+    jumpCounter::Integer
 } deriving (Show)
 
 instance ToJSON (StackMachineResponse) where

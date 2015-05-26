@@ -11,7 +11,7 @@ import qualified Model.Formula as F
 import qualified Model.StackMachineResponse as Response
 
 --stackMachine operations
-executeAll :: Stack -> Program -> Int -> Int -> Response.StackMachineResponse
+executeAll :: Stack -> Program -> Integer -> Integer -> Response.StackMachineResponse
 executeAll stack program programCounter jumpCounter
     | jumpCounter > 1000 = error "Nicht mehr als 1000 Sprünge erlaubt"
     | length program == programCounter = Response.StackMachineResponse stack programCounter jumpCounter
@@ -19,7 +19,7 @@ executeAll stack program programCounter jumpCounter
         let response = execute (program P.!! programCounter) stack program programCounter jumpCounter
         executeAll (Response.stack response) program (Response.programCounter response) (Response.jumpCounter response)
 
-execute :: Command -> Stack -> Program -> Int -> Int -> Response.StackMachineResponse
+execute :: Command -> Stack -> Program -> Integer -> Integer -> Response.StackMachineResponse
 execute (PUSH x) stack _ programCounter jumpCounter =
     if x < length stack then
         Response.StackMachineResponse (stack P.!! x : stack) (programCounter + 1) jumpCounter
@@ -35,25 +35,25 @@ execute (PUSHK x) stack _ programCounter jumpCounter
 
 execute ADD (x:y:xs) _ programCounter jumpCounter =
     if isNumber (show x) && isNumber (show y) then
-        Response.StackMachineResponse (F.Value (show ((P.read (show y) :: Int) + (P.read (show x) :: Int))) : xs) (programCounter + 1) jumpCounter
+        Response.StackMachineResponse (F.Value (show ((P.read (show y) :: Integer) + (P.read (show x) :: Integer))) : xs) (programCounter + 1) jumpCounter
     else Response.StackMachineResponse (F.ADD y x : xs) (programCounter + 1) jumpCounter
 execute ADD _ _ _ _ = error "Nicht genug Elemente im Stack"
 
 execute SUBTRACT (x:y:xs) _ programCounter jumpCounter
-    | isNumber (show x) && isNumber (show y) = Response.StackMachineResponse (F.Value (show ((P.read (show y) :: Int) - (P.read (show x) :: Int))) : xs) (programCounter + 1) jumpCounter
+    | isNumber (show x) && isNumber (show y) = Response.StackMachineResponse (F.Value (show ((P.read (show y) :: Integer) - (P.read (show x) :: Integer))) : xs) (programCounter + 1) jumpCounter
     | otherwise = Response.StackMachineResponse (F.SUB y x : xs) (programCounter + 1) jumpCounter
 execute SUBTRACT _ _ _ _ = error "Nicht genug Elemente im Stack"
 
 execute MULTIPLY (x:y:xs) _ programCounter jumpCounter =
     if isNumber (show x) && isNumber (show y) then
-        Response.StackMachineResponse (F.Value (show ((P.read (show y) :: Int) * (P.read (show x) :: Int))) : xs) (programCounter + 1) jumpCounter
+        Response.StackMachineResponse (F.Value (show ((P.read (show y) :: Integer) * (P.read (show x) :: Integer))) : xs) (programCounter + 1) jumpCounter
     else
         Response.StackMachineResponse (F.MUL y x : xs) (programCounter + 1) jumpCounter
 execute MULTIPLY _ _ _ _ = error "Nicht genug Elemente im Stack"
 
 execute DIVIDE (x:y:xs) _ programCounter jumpCounter =
     if isNumber (show x) && isNumber (show y) then
-        Response.StackMachineResponse (F.Value (show ((P.read (show y) :: Int) `div` (P.read (show x) :: Int))) : xs) (programCounter + 1) jumpCounter
+        Response.StackMachineResponse (F.Value (show ((P.read (show y) :: Integer) `div` (P.read (show x) :: Integer))) : xs) (programCounter + 1) jumpCounter
     else
         Response.StackMachineResponse (F.DIV y x : xs) (programCounter + 1) jumpCounter
 execute DIVIDE _ _ _ _ = error "Nicht genug Elemente im Stack"
@@ -84,7 +84,7 @@ isNumber x = all isDigit x
 isWord :: String -> Bool
 isWord = all isAlpha
 
-findMark:: Program -> Command -> Int
+findMark:: Program -> Command -> Integer
 findMark program mark =
     if mark `L.elem` program then
         M.fromJust (L.elemIndex mark program)

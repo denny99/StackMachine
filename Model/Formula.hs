@@ -45,7 +45,7 @@ instance Eq Formula where
   SUB a1 a2 == SUB b1 b2    =  a1 == b1 && a2 == b2
   _              == _               =  False
 
-parseFormula :: String -> String -> Int -> Formula
+parseFormula :: String -> String -> Integer -> Formula
 parseFormula [] _ _ = Value "0"
 parseFormula (x:xs) sx parCounter
     | x == '*'  && parCounter == 0 =
@@ -80,7 +80,7 @@ removePars string
     | P.last string == ')' = P.init string
     | otherwise = string
 
-findTerm :: String -> String -> Int -> String
+findTerm :: String -> String -> Integer -> String
 findTerm (x:xs) sx parCounter
     | x == '*'  && parCounter == 0 = sx
     | x == '/'  && parCounter == 0 = sx
