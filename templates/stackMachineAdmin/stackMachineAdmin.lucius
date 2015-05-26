@@ -12,7 +12,6 @@
 }
 
 .stackTable {
-    height: 640px;
     max-height: 640px;
     overflow-y: auto;
 }
