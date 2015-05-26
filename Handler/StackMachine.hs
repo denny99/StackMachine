@@ -20,8 +20,8 @@ postStackMachineR = do
     let stack = Request.stack stackMachineRequest
     if Request.all stackMachineRequest == False
         then
-            if programCounter < length program then
-                sendResponseStatus status200 (execute (program P.!! programCounter) stack program programCounter 0)
+            if programCounter < fromIntegral (length program) then
+                sendResponseStatus status200 (execute (program P.!! fromIntegral programCounter) stack program programCounter 0)
             else
                 error "Programm ist bereits beendet"
         else

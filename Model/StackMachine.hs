@@ -14,15 +14,15 @@ import qualified Model.StackMachineResponse as Response
 executeAll :: Stack -> Program -> Integer -> Integer -> Response.StackMachineResponse
 executeAll stack program programCounter jumpCounter
     | jumpCounter > 1000 = error "Nicht mehr als 1000 Sprünge erlaubt"
-    | length program == programCounter = Response.StackMachineResponse stack programCounter jumpCounter
+    | fromIntegral (length program) == programCounter = Response.StackMachineResponse stack programCounter jumpCounter
     | otherwise = do
-        let response = execute (program P.!! programCounter) stack program programCounter jumpCounter
+        let response = execute (program P.!! fromIntegral programCounter) stack program programCounter jumpCounter
         executeAll (Response.stack response) program (Response.programCounter response) (Response.jumpCounter response)
 
 execute :: Command -> Stack -> Program -> Integer -> Integer -> Response.StackMachineResponse
 execute (PUSH x) stack _ programCounter jumpCounter =
-    if x < length stack then
-        Response.StackMachineResponse (stack P.!! x : stack) (programCounter + 1) jumpCounter
+    if x < fromIntegral (length stack) then
+        Response.StackMachineResponse (stack P.!! fromIntegral x : stack) (programCounter + 1) jumpCounter
     else
         error "Stackadresse existiert nicht"
 
@@ -61,8 +61,8 @@ execute DIVIDE _ _ _ _ = error "Nicht genug Elemente im Stack"
 execute PRINT stack _ programCounter jumpCounter = Response.StackMachineResponse (P.tail stack) (programCounter + 1) jumpCounter
 execute (SLIDE (m:n:_)) stack _ programCounter jumpCounter =
     if m >= 0 && n > 0 then
-        if (m + n) < (length stack + 1) then
-            Response.StackMachineResponse (concat [take m stack, drop (m + n) stack]) (programCounter + 1) jumpCounter
+        if (m + n) < fromIntegral (length stack + 1) then
+            Response.StackMachineResponse (concat [take (fromIntegral m) stack, drop (fromIntegral (m + n)) stack]) (programCounter + 1) jumpCounter
         else
             error "Nicht genug Elemente im Stack"
     else
@@ -87,6 +87,6 @@ isWord = all isAlpha
 findMark:: Program -> Command -> Integer
 findMark program mark =
     if mark `L.elem` program then
-        M.fromJust (L.elemIndex mark program)
+        fromIntegral $ M.fromJust (L.elemIndex mark program)
     else
         error "Sprungmarke nicht gefunden"
