@@ -41,6 +41,7 @@ function StackMachineModel() {
     //visibility of wells
     self.taskDescVisible = ko.observable(false);
     self.btnDescVisible = ko.observable(true);
+    self.commandDescVisible = ko.observable(false);
 
     //task management
     function loadTasks() {
@@ -91,6 +92,16 @@ function StackMachineModel() {
             dataType: "json"
         });
     };
+    self.purgeTask = function() {
+        self.backupStack = [];
+        self.targetStack([]);
+        self.task(undefined);
+
+        self.taskDescVisible(false);
+        self.btnDescVisible(false);
+
+        self.resetProgram();
+    };
     self.task = ko.observable("");
 
     //editor settings
@@ -98,9 +109,7 @@ function StackMachineModel() {
     self.editor.setTheme("ace/theme/tomorrow");
     self.editor.getSession().setMode("ace/mode/stackMachine");
     self.editor.on("change", function (e) {
-        self.stack(self.backupStack);
-        self.programCounter(0);
-        update(false);
+        self.invalidated(true);
     });
 
     //program values
@@ -109,21 +118,45 @@ function StackMachineModel() {
     self.backupStack = [];
     self.stack = ko.observableArray([]);
     self.targetStack = ko.observableArray([]);
-    self.stackHistory = [self.backupStack];
+    self.stackHistory = [{stack: self.backupStack, programCounter: 0}];
+    self.invalidated = ko.observable(true);
+
+    function highlightLine(programCounter) {
+        //get whole program
+        var lines = self.editor.getSession().getDocument().getAllLines();
+        var i = 0;
+        while (i !== programCounter + 1) {
+            var line = lines[i];
+            var newLine = /^\s*$/;
+            var comment = /^#.*$/;
+            var breakpoint = /^break$/;
+            if (newLine.test(line) || comment.test(line)) {
+                programCounter++;
+            }
+            i++
+        }
+        self.editor.gotoLine(i);
+    }
 
     //API actions
-    function update(removeBlank) {
+    function update() {
         //get whole program
-        self.program([]);
+        self.program(parseProgram(false));
+
+    }
+
+    function parseProgram() {
+        var program = [];
         var lines = self.editor.getSession().getDocument().getAllLines();
         lines.forEach(function (line, i) {
-            if (/^\s*$/.test(line) && removeBlank) {
-                self.editor.getSession().getDocument().removeLines(i, i);
-            }
-            else {
-                self.program.push(getCommand(line));
+            var newLine = /^\s*$/;
+            var comment = /^#.*$/;
+            var breakpoint = /^break$/;
+            if (!newLine.test(line) && !comment.test(line)) {
+                program.push(getCommand(line));
             }
         });
+        return program;
     }
 
     self.reset = function () {
@@ -137,20 +170,25 @@ function StackMachineModel() {
         self.stack(self.backupStack);
         self.stackHistory = [];
         self.programCounter(0);
-        self.editor.gotoLine(0);
+        highlightLine(0);
+        update();
+        self.invalidated(false);
     };
 
     self.undoCommand = function () {
-        self.programCounter(self.stackHistory.length == 0 ? 0 : self.programCounter() - 1);
-        self.editor.gotoLine(self.stackHistory.length == 0 ? 1 : self.programCounter() + 1);
-        self.stack(self.stackHistory.length == 0 ? self.backupStack : self.stackHistory.pop());
+        var data = self.stackHistory.pop();
+        self.programCounter(self.stackHistory.length == 0 ? 0 : data.programCounter);
+        highlightLine(self.stackHistory.length == 0 ? 0 : self.programCounter());
+        self.stack(self.stackHistory.length == 0 ? self.backupStack : data.stack);
     };
 
     self.running = ko.observable(false);
     self.executeCommand = function () {
-        update(true);
+        if (self.invalidated()) {
+            self.resetProgram();
+        }
         self.running(true);
-        self.stackHistory.push(self.stack());
+        self.stackHistory.push({stack: self.stack(), programCounter: self.programCounter()});
         Messenger().ajax({
                 errorMessage: "Fehlerhafter Code",
                 id: "executeCommand",
@@ -174,7 +212,7 @@ function StackMachineModel() {
                     self.stack(data.stack);
                     self.programCounter(data.programCounter);
                     //highlight current line
-                    self.editor.gotoLine(data.programCounter + 1);
+                    highlightLine(data.programCounter);
                 },
                 error: function (data) {
                     self.editor.gotoLine(self.programCounter() + 1);
@@ -188,9 +226,11 @@ function StackMachineModel() {
             });
     };
     self.executeProgram = function () {
-        self.resetProgram();
-        update(true);
+        if (self.invalidated()) {
+            self.resetProgram();
+        }
         self.running(true);
+        self.stackHistory.push({stack: self.stack(), programCounter: self.programCounter()});
         Messenger().ajax({
             errorMessage: "Fehlerhafter Code",
             id: "executeProgram",
@@ -213,7 +253,7 @@ function StackMachineModel() {
                 self.stack(data.stack);
                 self.programCounter(data.programCounter);
                 //highlight current line
-                self.editor.gotoLine(data.programCounter + 1);
+                highlightLine(data.programCounter);
             },
             error: function (data) {
                 return data.responseJSON.error;
@@ -226,7 +266,7 @@ function StackMachineModel() {
         });
     };
     self.validateProgram = function () {
-        update(true);
+        update();
         self.executeProgram();
         self.running(true);
         Messenger().ajax({
@@ -257,7 +297,7 @@ function StackMachineModel() {
     };
 
     self.disableContinue = ko.computed(function () {
-        return self.program().length <= self.programCounter();
+        return self.program().length <= self.programCounter() && !self.invalidated();
     });
 
     //file management
@@ -336,8 +376,9 @@ function StackMachineModel() {
     }
 }
 
+var debug = new StackMachineModel();
 $(document).ready(function () {
-    ko.applyBindings(new StackMachineModel(), document.getElementById("main"));
+    ko.applyBindings(debug, document.getElementById("main"));
     initTooltips();
 
     $("#main").fadeIn();

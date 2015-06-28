@@ -6,7 +6,7 @@ import qualified Prelude as P
 
 data Command = PUSH Integer | POP | BRANCHZ String |
   JUMP String | MARK String | PUSHK String | ADD |
-  SUBTRACT | MULTIPLY | DIVIDE | PRINT | SLIDE [Integer]
+  SUBTRACT | MULTIPLY | DIVIDE | PRINT | SLIDE [Integer] | BREAK
   deriving (Show, Eq)
 
 type Program = [Command]
@@ -20,26 +20,28 @@ instance FromJSON Command where
                 then return POP
                 else if command == ("branchz" :: String)
                     then BRANCHZ <$> o .: "value"
-                    else if command == ("jump" :: String)
-                        then JUMP <$> o .: "value"
-                        else if command == ("pushK" :: String)
-                            then PUSHK <$> o .: "value"
-                            else if command == ("+" :: String)
-                                then return ADD
-                                else if command == ("-" :: String)
-                                    then return SUBTRACT
-                                    else if command == ("*" :: String)
-                                        then return MULTIPLY
-                                        else if command == ("/" :: String)
-                                            then return DIVIDE
-                                            else if command == ("slide" :: String)
-                                                then SLIDE <$> o .: "value"
-                                                else if command == ("print" :: String)
-                                                    then return PRINT
-                                                    else if P.last command == '.'
-                                                        then return $ MARK $ P.init command
-                                                        else
-                                                            error $ "Unbekannter Befehl: " ++ command
+                    else if command == ("break" :: String)
+                        then return BREAK
+                        else if command == ("jump" :: String)
+                            then JUMP <$> o .: "value"
+                            else if command == ("pushK" :: String)
+                                then PUSHK <$> o .: "value"
+                                else if command == ("+" :: String)
+                                    then return ADD
+                                    else if command == ("-" :: String)
+                                        then return SUBTRACT
+                                        else if command == ("*" :: String)
+                                            then return MULTIPLY
+                                            else if command == ("/" :: String)
+                                                then return DIVIDE
+                                                else if command == ("slide" :: String)
+                                                    then SLIDE <$> o .: "value"
+                                                    else if command == ("print" :: String)
+                                                        then return PRINT
+                                                        else if P.last command == '.'
+                                                            then return $ MARK $ P.init command
+                                                            else
+                                                                error $ "Unbekannter Befehl: " ++ command
 
     parseJSON _ = mzero
 
@@ -60,3 +62,4 @@ getCommand (MULTIPLY) = "*"
 getCommand (DIVIDE) = "/"
 getCommand (SLIDE _) = "slide"
 getCommand (PRINT) = "print"
+getCommand (BREAK) = "break"

@@ -15,6 +15,7 @@ executeAll :: Stack -> Program -> Integer -> Integer -> Response.StackMachineRes
 executeAll stack program programCounter jumpCounter
     | jumpCounter > 1000 = error "Nicht mehr als 1000 Sprünge erlaubt"
     | fromIntegral (length program) == programCounter = Response.StackMachineResponse stack programCounter jumpCounter
+    | (program P.!! fromIntegral programCounter) == BREAK = Response.StackMachineResponse stack (programCounter + 1) jumpCounter
     | otherwise = do
         let response = execute (program P.!! fromIntegral programCounter) stack program programCounter jumpCounter
         executeAll (Response.stack response) program (Response.programCounter response) (Response.jumpCounter response)
@@ -76,7 +77,7 @@ execute (BRANCHZ x) (y:xs) program programCounter jumpCounter =
         Response.StackMachineResponse xs (findMark program (MARK x)) (jumpCounter + 1)
     else
         Response.StackMachineResponse xs (programCounter + 1) (jumpCounter + 1)
-
+execute BREAK stack _ programCounter jumpCounter = Response.StackMachineResponse stack (programCounter + 1) jumpCounter
 isNumber :: String -> Bool
 isNumber ('-':xs) = all isDigit xs
 isNumber x = all isDigit x

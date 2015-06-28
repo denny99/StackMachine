@@ -13,13 +13,69 @@
                         <span class="input-group-btn">
                             <button class="btn btn-success" type="button" data-bind="click: loadTask" data-toggle="tooltip" data-placement="top" title="Aufgabe starten">
                                 <span class="glyphicon glyphicon-floppy-open">
+                            <button class="btn btn-warning" type="button" data-bind="click: purgeTask" data-toggle="tooltip" data-placement="top" title="Aufgabe entfernen">
+                                <span class="glyphicon glyphicon-floppy-remove">
     <div class="row form-group">
         <div class="col-md-12">
             <div class="btn-group">
                 <button type="button" class="btn btn-default" data-toggle="modal" data-target="#ratingModal"> Bewerten
-                <button class="btn btn-default" type="button" data-bind="click: function() {btnDescVisible(!btnDescVisible())}"> Hinweise umschalten
-                <button class="btn btn-default" type="button" data-bind="click: function() {taskDescVisible(!taskDescVisible())}, visible: task()"> Aufgabenbeschreibung umschalten
+                <button class="btn btn-default" type="button" data-bind="click: function() {btnDescVisible(!btnDescVisible())}"> Hinweise
+                <button type="button" class="btn btn-default" data-bind="click: function() {commandDescVisible(!commandDescVisible())}">
+                     Befehle
+                <button class="btn btn-default" type="button" data-bind="click: function() {taskDescVisible(!taskDescVisible())}, visible: task()"> Aufgabenbeschreibung
 
+    <div class="row form-group" data-bind="visible: commandDescVisible()">
+        <div class="col-xs-12 well well-lg">
+            <h4> Befehlssatz
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th style="width: 110px;"> Befehl
+                    <th> Beschreibung
+                        <tbody>
+                <tr>
+                    <td> pop
+                    <td>
+                        das oberste Element des Stacks wird entfernt.
+                <tr>
+                    <td> push i
+                    <td>
+                        i ist eine Zahl als Stackadresse; 0 = oberstes, 1 = zweites, ... Dieses Element des Stacks
+                        wird oben auf den Stack kopiert.
+                <tr>
+                    <td> pushK n
+                    <td> n ist eine Zahlenkonstante oder Symbol, das auf den Stack obendrauf gelegt wird.
+                <tr>
+                    <td> +, −, ∗, /
+                    <td>
+                        Arithmetische Operationen: Jeweils die obersten beiden Elemente des Stacks werden
+                        verknüpft und danach vom Stack entfernt. D.h. aus [a,b,...] wird unter der Operation
+                        −: der Stack [b-a, ...]
+                <tr>
+                    <td> print
+                    <td>
+                        Gebe das Ergebnis aus: drucke das oberste Element des Stacks und lösche das gedruckte
+                        Element. Da das Ergebnis immer ausgeben wird redundant.
+                <tr>
+                    <td> slide m n
+                    <td>
+                        Schiebe die obersten m Elemente um n nach unten. D.h. n Elemente unter den m
+                        oberen verschwinden.
+                <tr>
+                    <td> marke.
+                    <td> Symbolische Sprungmarke im Programm.
+                <tr>
+                    <td> branchz marke
+                    <td> Wenn auf dem Stack eine Null steht, springe zu marke. Löscht immer das oberste Element
+                <tr>
+                    <td> jump marke
+                    <td> Springe zu marke
+                <tr>
+                    <td> #Text
+                    <td> Mit # wird ein einzeiliger Kommentar eingeleitet
+                <tr>
+                    <td> break
+                    <td> Setzt einen Breakpoint. D.h. "Alles Ausführen" führt den Code aus bis ein break erreicht wird
     <div class="row form-group" data-bind="visible: task() && taskDescVisible(), with: task">
         <div class="col-xs-12 well well-lg" data-bind="html: desc">
     <div class="row form-group" data-bind="visible: btnDescVisible()">
@@ -36,12 +92,6 @@
             <p> In der nachfolgenden Tabelle sind alle Knöpfe des SkriptEditors kurz erklärt.
             <table class="table">
                 <thead>
-                    <tr>
-                        <td>
-                            <button type="button" class="btn btn-default btn-xs text-button" disabled>
-                                <span class="glyphicon glyphicon-question-sign">
-                        <td>
-                            Zeigt ein Fenster an in dem alle Befehle der Stackmaschine erklärt sind
                     <tr>
                         <td>
                             <a type="button" class="btn btn-warning btn-xs text-button" disabled>
@@ -83,7 +133,7 @@
                             <a type="button" class="btn btn-primary btn-xs text-button" disabled>
                                 <span class="glyphicon glyphicon-play">
                         <td>
-                            Führe den kompletten Code aus
+                            Führt den Code ab der letzten Position aus. Nach Reset ab Zeile 1.
                     <tr>
                         <td>
                             <a type="button" class="btn btn-success btn-xs text-button" disabled>
@@ -100,8 +150,6 @@
                             <h3 class="panel-title" style="margin-top: 10px">SkriptEditor
                         <div class="col-xs-8">
                             <div class="btn-group btn-group-justified" role="group" aria-label="...">
-                                <a type="button" class="btn btn-default" data-toggle="modal" data-target="#helpModal">
-                                    <span class="glyphicon glyphicon-question-sign">
                                 <a type="button" class="btn btn-warning" data-bind="click: reset" data-toggle="tooltip" data-placement="top" title="Neues Skript">
                                     <span class="glyphicon glyphicon-file">
                                 <a type="button" class="btn btn-success" data-bind="click:loadScript" data-toggle="tooltip" data-placement="top" title="Skript laden">
@@ -118,9 +166,9 @@
                             <span class="glyphicon glyphicon-chevron-left">
                         <a type="button" class="btn btn-primary" data-bind="click: executeCommand, attr: {disabled: disableContinue() || running()}" data-toggle="tooltip" data-placement="top" title="Schrittweise ausführen">
                             <span class="glyphicon glyphicon-chevron-right">
-                        <a type="button" class="btn btn-primary" data-bind="click: executeProgram, attr: {disabled: program().length === 0 || running()}" data-toggle="tooltip" data-placement="top" title="Alles ausführen">
+                        <a type="button" class="btn btn-primary" data-bind="click: executeProgram, attr: {disabled: disableContinue() || running()}" data-toggle="tooltip" data-placement="top" title="Alles ausführen">
                             <span class="glyphicon glyphicon-play">
-                        <a type="button" class="btn btn-success btn-block" data-bind="click: validateProgram, visible: task, attr: {disabled: program().length === 0 || running()}" data-toggle="tooltip" data-placement="top" title="Ergebnis überprüfen">
+                        <a type="button" class="btn btn-success btn-block" data-bind="click: validateProgram, visible: task, attr: {disabled: running()}" data-toggle="tooltip" data-placement="top" title="Ergebnis überprüfen">
                             <span class="glyphicon glyphicon-send">
         <div class="stackTable table-responsive ace-margin" data-bind="css: {'col-md-4': task(), 'col-md-6': !task()}">
             <h3 class="text-center"> Aktueller Stack
@@ -199,60 +247,6 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen
                     <button type="button" class="btn btn-success" data-bind="click: saveRating">Speichern
-
-    <div class="modal fade" id="helpModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;
-                    <h4 class="modal-title">Befehlssatz
-                <div class="modal-body">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th style="width: 110px;"> Befehl
-                                <th> Beschreibung
-                        <tbody>
-                            <tr>
-                                <td> pop
-                                <td>
-                                    das oberste Element des Stacks wird entfernt.
-                            <tr>
-                                <td> push i
-                                <td>
-                                    i ist eine Zahl als Stackadresse; 0 = oberstes, 1 = zweites, ... Dieses Element des Stacks
-                                    wird oben auf den Stack kopiert.
-                            <tr>
-                                <td> pushK n
-                                <td> n ist eine Zahlenkonstante oder Wörter, die auf den Stack obendrauf gelegt wird.
-                            <tr>
-                                <td> +, −, ∗, /
-                                <td>
-                                    Arithmetische Operationen: Jeweils die obersten beiden Elemente des Stacks werden
-                                    verknüpft und danach vom Stack entfernt. D.h. aus [a,b,...] wird unter der Operation
-                                    −: der Stack [b-a, ...]
-                            <tr>
-                                <td> print
-                                <td>
-                                    Gebe das Ergebnis aus: drucke das oberste Element des Stacks und lösche das gedruckte
-                                    Element. Da das Ergebnis immer ausgeben wird redundant.
-                            <tr>
-                                <td> slide m n
-                                <td>
-                                    Schiebe die obersten m Elemente um n nach unten. D.h. n Elemente unter den m
-                                    oberen verschwinden.
-                            <tr>
-                                <td> marke.
-                                <td> Symbolische Sprungmarke im Programm.
-                            <tr>
-                                <td> branchz marke
-                                <td> Wenn auf dem Stack eine Null steht, springe zu marke und l¨osche das oberste Element
-                            <tr>
-                                <td> jump marke
-                                <td> Springe zu marke
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
 
     <div class="modal fade" id="saveFileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">

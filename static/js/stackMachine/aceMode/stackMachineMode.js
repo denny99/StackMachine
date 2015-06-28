@@ -7,36 +7,38 @@ define('ace/mode/stackMachine_highlight_rules', ["require", "exports", "module",
 
         this.$rules = {
             "start": [
-                {token: "storage.type", regex: "pushK ", next: "char"},
-                {token: "storage.type", regex: "push ", next: "number"},
-                {token: "storage.type", regex: "slide ", next: "slideInput"},
-                {token: "storage.type", regex: /pop$/},
+                {token: "support.function", regex: "pushK ", next: "char"},
+                {token: "support.function", regex: "push ", next: "number"},
+                {token: "support.function", regex: "slide ", next: "slideInput"},
+                {token: "support.function", regex: /pop$/},
                 {token: "keyword.operator", regex: /\+$/},
                 {token: "keyword.operator", regex: /\-/},
                 {token: "keyword.operator", regex: /\*/},
                 {token: "keyword.operator", regex: /\//},
-                {token: "storage.type", regex: /print$/},
-                {token: "keyword.control", regex: /[a-zA-Z_]*[0-9]*\.$/},
-                {token: "keyword.control", regex: "branchz ", next: "word"},
-                {token: "keyword.control", regex: "jump ", next: "word"},
-                {defaultToken: "invalid"}
+                {token: "support.type", regex: /print$/},
+                {token: "string.quoted.double.bold", regex: /[a-zA-Z_]*[0-9]*\.$/},
+                {token: "support.function", regex: "branchz ", next: "word"},
+                {token: "support.function", regex: "jump ", next: "word"},
+                {token: "comment.line.number-sign", regex: /#.*/},
+                {token: "support.constant", regex: /break$/},
+                {defaultToken: "invalid.illegal"}
             ],
             "word": [
                 {token: "string.quoted.double.bold", regex: /[a-zA-Z_]*[0-9]*$/, next: "start"},
-                {defaultToken: "invalid"}
+                {defaultToken: "invalid.illegal"}
             ],
             "slideInput": [
                 {token: "constant.numeric.bold", regex: /[0-9]\s[0-9]+$/, next: "start"},
-                {defaultToken: "invalid"}
+                {defaultToken: "invalid.illegal"}
             ],
             "number": [
                 {token: "constant.numeric.bold", regex: /[\-]?[0-9]+$/, next: "start"},
-                {defaultToken: "invalid"}
+                {defaultToken: "invalid.illegal"}
             ],
             "char": [
                 {token: "constant.numeric.bold", regex: /[\-]?[0-9]*$/, next: "start"},
-                {token: "string.qouted.double.bold", regex: /[a-zA-Z0-9]*$/, next: "start"},
-                {defaultToken: "invalid"}
+                {token: "string.quoted.double.bold", regex: /[a-zA-Z0-9]*$/, next: "start"},
+                {defaultToken: "invalid.illegal"}
             ]
         };
 
