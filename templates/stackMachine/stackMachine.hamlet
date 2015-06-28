@@ -19,10 +19,9 @@
         <div class="col-md-12">
             <div class="btn-group">
                 <button type="button" class="btn btn-default" data-toggle="modal" data-target="#ratingModal"> Bewerten
-                <button class="btn btn-default" type="button" data-bind="click: function() {btnDescVisible(!btnDescVisible())}"> Hinweise
-                <button type="button" class="btn btn-default" data-bind="click: function() {commandDescVisible(!commandDescVisible())}">
-                     Befehle
-                <button class="btn btn-default" type="button" data-bind="click: function() {taskDescVisible(!taskDescVisible())}, visible: task()"> Aufgabenbeschreibung
+                <button class="btn btn-default" type="button" data-bind="text: btnDescToggle, click: function() {btnDescVisible(!btnDescVisible())}">
+                <button type="button" class="btn btn-default" data-bind="text: commandDescToggle, click: function() {commandDescVisible(!commandDescVisible())}">
+                <button class="btn btn-default" type="button" data-bind="text: taskDescToggle, click: function() {taskDescVisible(!taskDescVisible())}, visible: task()">
 
     <div class="row form-group" data-bind="visible: commandDescVisible()">
         <div class="col-xs-12 well well-lg">
@@ -36,15 +35,14 @@
                 <tr>
                     <td> pop
                     <td>
-                        das oberste Element des Stacks wird entfernt.
+                        Entferne das oberste Element
                 <tr>
                     <td> push i
                     <td>
-                        i ist eine Zahl als Stackadresse; 0 = oberstes, 1 = zweites, ... Dieses Element des Stacks
-                        wird oben auf den Stack kopiert.
+                        Kopiere das Element des Stacks an Adresse i oben auf den Stack (0 = oberstes Element)
                 <tr>
                     <td> pushK n
-                    <td> n ist eine Zahlenkonstante oder Symbol, das auf den Stack obendrauf gelegt wird.
+                    <td> Lege eine Zahlenkonstante oder ein Symbol n oben auf den Stack
                 <tr>
                     <td> +, −, ∗, /
                     <td>
@@ -54,13 +52,12 @@
                 <tr>
                     <td> print
                     <td>
-                        Gebe das Ergebnis aus: drucke das oberste Element des Stacks und lösche das gedruckte
-                        Element. Da das Ergebnis immer ausgeben wird redundant.
+                        Gebe das Ergebnis aus: Drucke das oberste Element des Stacks und lösche das gedruckte
+                        Element. Da das Ergebnis immer ausgeben wird, redundant.
                 <tr>
                     <td> slide m n
                     <td>
-                        Schiebe die obersten m Elemente um n nach unten. D.h. n Elemente unter den m
-                        oberen verschwinden.
+                        Entferne n nach den obersten m Elementen aus dem Stack
                 <tr>
                     <td> marke.
                     <td> Symbolische Sprungmarke im Programm.
@@ -133,13 +130,13 @@
                             <a type="button" class="btn btn-primary btn-xs text-button" disabled>
                                 <span class="glyphicon glyphicon-play">
                         <td>
-                            Führt den Code ab der letzten Position aus. Nach Reset ab Zeile 1.
+                            Führe den Code ab der letzten Position aus, bis ein break oder das Programmende erreicht wird. Beginnt nach Reset ab Zeile 1.
                     <tr>
                         <td>
                             <a type="button" class="btn btn-success btn-xs text-button" disabled>
                                 <span class="glyphicon glyphicon-send">
                         <td>
-                            Überprüfe das Skript auf Korrektheit. Erst sichtbar nach Laden einer Aufgabe
+                            Überprüfe das Ergebnis auf Korrektheit. Erst sichtbar nach Laden einer Aufgabe
 
     <div class="row form-group">
         <div class="editor" data-bind="css: {'col-md-4': task(), 'col-md-6': !task()}">

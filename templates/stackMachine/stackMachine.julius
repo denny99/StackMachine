@@ -43,6 +43,31 @@ function StackMachineModel() {
     self.btnDescVisible = ko.observable(true);
     self.commandDescVisible = ko.observable(false);
 
+    self.btnDescToggle = ko.computed(function() {
+        if (self.btnDescVisible()) {
+            return "Hinweise ausblenden"
+        }
+        else {
+            return "Hinweise einblenden"
+        }
+    });
+    self.commandDescToggle = ko.computed(function() {
+        if (self.commandDescVisible()) {
+            return "Befehlsliste ausblenden"
+        }
+        else {
+            return "Befehlsliste einblenden"
+        }
+    });
+    self.taskDescToggle = ko.computed(function() {
+        if (self.taskDescVisible()) {
+            return "Aufgabenbeschreibung ausblenden"
+        }
+        else {
+            return "Aufgabenbeschreibung einblenden"
+        }
+    });
+
     //task management
     function loadTasks() {
         Messenger().ajax({
