@@ -207,7 +207,7 @@
                 <div class="modal-body">
                     <form>
                         <div class="form-group">
-                            <p> Das Programm hat mir geholfen das Thema besser zu verstehen
+                            <p> Das Programm hat mir geholfen das Thema besser zu verstehen (1-schlecht 5-gut)
                         <div class="form-group">
                             <label class="radio-inline">
                                 <input type="radio" name="helpful" autocomplete="off" value=1 data-bind="checked: helpful"> 1
@@ -220,7 +220,7 @@
                             <label class="radio-inline">
                                 <input type="radio" name="helpful" autocomplete="off" value=5 data-bind="checked: helpful"> 5
                         <div class="form-group">
-                            <p> Das Programm ist leicht verständlich
+                            <p> Das Programm ist leicht verständlich (1-schlecht 5-gut)
                         <div class="form-group">
                             <label class="radio-inline">
                                 <input type="radio" name="understandable" autocomplete="off" value=1 data-bind="checked: understandable"> 1
