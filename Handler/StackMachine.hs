@@ -18,7 +18,6 @@ postStackMachineR = do
     let program = Request.program stackMachineRequest
     let programCounter = Request.programCounter stackMachineRequest
     let stack = Request.stack stackMachineRequest
-    print programCounter
     if Request.all stackMachineRequest == False
         then
             if programCounter < fromIntegral (length program) then
